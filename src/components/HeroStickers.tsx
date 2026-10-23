@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
@@ -64,10 +64,28 @@ const stickerConfigs: StickerConfig[] = [
 export default function HeroStickers() {
   const shouldReduceMotion = useReducedMotion();
   const { isIntroComplete } = useIntro();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   return (
-    <div className="w-full relative py-6">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 items-center justify-center">
+    <div className="w-full relative py-4 sm:py-6">
+      {/* Mobile Swipe Indicator */}
+      <div className="md:hidden flex items-center justify-between text-xs font-mono font-bold text-white/80 mb-3 px-1">
+        <span className="flex items-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-white" />
+          <span>Swipeable sample tiles</span>
+        </span>
+        <span className="text-[11px] uppercase tracking-wider text-white/60">Swipe →</span>
+      </div>
+
+      {/* Container: Horizontal snap carousel on mobile (72% width so next card peeks), 4-col grid on desktop */}
+      <div className="flex md:grid md:grid-cols-4 overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-4 sm:gap-6 items-stretch pb-4 pt-2 -mx-4 px-4 min-[361px]:-mx-5 min-[361px]:px-5 md:mx-0 md:px-0 no-scrollbar">
         {stickerConfigs.map((item, idx) => {
           const project = projects.find((p) => p.slug === item.slug);
           const isReel = item.aspect === "9:16";
@@ -89,8 +107,8 @@ export default function HeroStickers() {
                   ? {
                       opacity: 1,
                       scale: 1,
-                      rotate: item.rotate,
-                      y: [-4, 4, -4],
+                      rotate: isMobile ? item.rotate * 0.6 : item.rotate,
+                      y: isMobile ? 0 : [-4, 4, -4],
                     }
                   : { opacity: 0, scale: 0.9, rotate: 0 }
               }
@@ -106,25 +124,31 @@ export default function HeroStickers() {
                         delay: item.delay,
                       },
                       rotate: { duration: 0.5, delay: item.delay },
-                      y: {
-                        duration: item.floatDuration,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        repeatType: "mirror",
-                      },
+                      y: isMobile
+                        ? undefined
+                        : {
+                            duration: item.floatDuration,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            repeatType: "mirror",
+                          },
                     }
               }
-              whileHover={{
-                scale: 1.04,
-                rotate: 0,
-                zIndex: 20,
-                transition: { duration: 0.2 },
-              }}
-              className="relative"
+              whileHover={
+                !isMobile
+                  ? {
+                      scale: 1.04,
+                      rotate: 0,
+                      zIndex: 20,
+                      transition: { duration: 0.2 },
+                    }
+                  : undefined
+              }
+              className="flex-shrink-0 w-[74%] min-[380px]:w-[72%] md:w-auto snap-center relative"
             >
               <Link
                 href={project ? `/work/${project.slug}` : "/work"}
-                className={`group block w-full rounded-[20px] p-4 sm:p-5 border transition-shadow duration-300 shadow-card hover:shadow-card-hover select-none overflow-hidden relative ${
+                className={`group block w-full rounded-[20px] p-4 sm:p-5 border transition-all duration-300 shadow-card select-none overflow-hidden relative tap-bounce active:scale-[0.98] ${
                   isReel ? "aspect-[9/16]" : "aspect-square"
                 } ${
                   item.bg === "ink"
@@ -146,6 +170,7 @@ export default function HeroStickers() {
                         autoPlay
                         loop
                         playsInline
+                        preload="metadata"
                         className="w-full h-full object-cover rounded-[20px]"
                       />
                     ) : (
@@ -158,31 +183,31 @@ export default function HeroStickers() {
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/25 rounded-[20px]" />
                     <div className="absolute top-3 left-3 z-10">
-                      <span className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-brand-red text-white shadow-sticker">
-                        <Sparkles className="w-2.5 h-2.5" />
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider px-2.5 py-1 rounded-full bg-brand-red text-white shadow-sticker">
+                        <Sparkles className="w-3 h-3" />
                         <span>{item.label}</span>
                       </span>
                     </div>
                     <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-between text-white text-xs font-bold">
                       <span className="truncate pr-2">{project?.title || "Project"}</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 flex-shrink-0" />
+                      <ArrowUpRight className="w-4 h-4 flex-shrink-0" />
                     </div>
                   </div>
                 ) : (
                   <div className="h-full flex flex-col justify-between relative z-10">
                     {/* Top Sticker Pill */}
                     <div className="flex items-center justify-between">
-                      <span className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-brand-red text-white shadow-sticker">
-                        <Sparkles className="w-2.5 h-2.5" />
+                      <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full bg-brand-red text-white shadow-sticker">
+                        <Sparkles className="w-3 h-3" />
                         <span>{item.label}</span>
                       </span>
 
-                      <span className="text-[10px] font-mono opacity-60">
+                      <span className="text-xs font-mono opacity-60">
                         {item.aspect}
                       </span>
                     </div>
 
-                    {/* Center Typography Graphic (Exactly one clean title) */}
+                    {/* Center Typography Graphic (Single clean title, high contrast) */}
                     <div className="my-auto py-2">
                       <p className="text-xs font-mono font-bold uppercase tracking-widest text-brand-red">
                         {project?.category || "Creative"}
@@ -193,11 +218,11 @@ export default function HeroStickers() {
                     </div>
 
                     {/* Footer View Link */}
-                    <div className="pt-2 border-t border-current/10 flex items-center justify-between text-[11px] font-bold">
+                    <div className="pt-2 border-t border-current/10 flex items-center justify-between text-xs font-bold">
                       <span className="opacity-75">Sample layout</span>
                       <span className="inline-flex items-center gap-1 text-brand-red group-hover:translate-x-1 transition-transform">
                         <span>View</span>
-                        <ArrowUpRight className="w-3.5 h-3.5" />
+                        <ArrowUpRight className="w-4 h-4" />
                       </span>
                     </div>
                   </div>

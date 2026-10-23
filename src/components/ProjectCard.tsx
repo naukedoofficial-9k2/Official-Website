@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Project } from "@/content/projects";
 
 interface ProjectCardProps {
@@ -19,6 +19,8 @@ export default function ProjectCard({
   isLarge = false,
 }: ProjectCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+  const [isPlaying, setIsPlaying] = useState(false);
   const primaryMedia = project.media?.[0];
   const isVideo = primaryMedia?.type === "video";
   const hasRealAsset = primaryMedia && (primaryMedia.url.startsWith("/projects/") || primaryMedia.url.startsWith("/brand/"));
@@ -31,12 +33,13 @@ export default function ProjectCard({
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          el.play().catch(() => {});
+          el.play().then(() => setIsPlaying(true)).catch(() => {});
         } else {
           el.pause();
+          setIsPlaying(false);
         }
       },
-      { threshold: 0.4 }
+      { threshold: 0.3 }
     );
 
     observer.observe(el);
@@ -45,13 +48,26 @@ export default function ProjectCard({
 
   const handleMouseEnter = () => {
     if (isVideo && videoRef.current) {
-      videoRef.current.play().catch(() => {});
+      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
     }
   };
 
   const handleMouseLeave = () => {
     if (isVideo && videoRef.current) {
       videoRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const handleVideoTap = (e: React.MouseEvent) => {
+    if (isVideo && videoRef.current) {
+      // Toggle play/pause on tap
+      if (videoRef.current.paused) {
+        videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+      } else {
+        videoRef.current.pause();
+        setIsPlaying(false);
+      }
     }
   };
 
@@ -61,27 +77,24 @@ export default function ProjectCard({
       : project.clientIndustry || project.category;
 
   return (
-    <motion.div
-      whileHover={{ y: -6, transition: { duration: 0.25 } }}
-      className="h-full flex flex-col"
-    >
+    <div className="h-full flex flex-col">
       <Link
         href={`/work/${project.slug}`}
         data-cursor="View"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="group flex flex-col h-full bg-white rounded-[20px] border border-brand-border overflow-hidden transition-all duration-300 hover:shadow-card-hover hover:border-brand-red/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red"
+        className="group flex flex-col h-full bg-white rounded-[16px] sm:rounded-[20px] border border-brand-border overflow-hidden transition-all duration-300 hover:shadow-card-hover hover:border-brand-red/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red tap-bounce active:scale-[0.98]"
       >
-        {/* Media or Visual Slot with Quick Clip-Path Reveal (Animation 3) */}
+        {/* Media or Visual Slot: 4:3 on phones for tall cinematic presence, 16:10 or 16:9 on desktop */}
         <div
           className={`relative bg-brand-cream overflow-hidden border-b border-brand-border flex items-center justify-center ${
             isLarge
-              ? "aspect-[16/10] sm:aspect-[16/9]"
-              : "aspect-[16/10]"
+              ? "aspect-[4/3] sm:aspect-[16/9]"
+              : "aspect-[4/3] sm:aspect-[16/10]"
           }`}
         >
           <motion.div
-            initial={{ clipPath: "inset(0 0 100% 0)" }}
+            initial={shouldReduceMotion ? undefined : { clipPath: "inset(0 0 100% 0)" }}
             whileInView={{ clipPath: "inset(0 0 0% 0)" }}
             viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
@@ -95,6 +108,8 @@ export default function ProjectCard({
                 muted
                 loop
                 playsInline
+                preload="metadata"
+                onClick={handleVideoTap}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
             ) : hasRealAsset && primaryMedia?.url ? (
@@ -107,13 +122,13 @@ export default function ProjectCard({
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
             ) : (
-              /* Clean Branded Graphic Slot - Shows Category, NOT duplicate title, NO faint N watermark */
-              <div className="w-full h-full flex flex-col justify-between p-6 sm:p-8 bg-gradient-to-br from-brand-cream via-[#F5ECE0] to-[#EFE2D2] relative overflow-hidden">
+              /* Clean Branded Graphic Slot - Shows Category, NOT duplicate title, NO faint watermark */
+              <div className="w-full h-full flex flex-col justify-between p-5 min-[360px]:p-6 sm:p-8 bg-gradient-to-br from-brand-cream via-[#F5ECE0] to-[#EFE2D2] relative overflow-hidden">
                 <div className="flex items-center justify-between gap-2 z-10">
-                  <span className="text-[11px] font-black uppercase tracking-wider text-brand-red bg-white px-3 py-1 rounded-full border border-brand-border shadow-sm whitespace-nowrap">
+                  <span className="text-xs font-black uppercase tracking-wider text-brand-red bg-white px-3 py-1 rounded-full border border-brand-border shadow-sm whitespace-nowrap">
                     {project.category}
                   </span>
-                  <span className="text-[11px] font-black uppercase px-2.5 py-1 rounded-full bg-brand-red text-white shadow-sm whitespace-nowrap">
+                  <span className="text-xs font-black uppercase px-2.5 py-1 rounded-full bg-brand-red text-white shadow-sm whitespace-nowrap">
                     Sample layout
                   </span>
                 </div>
@@ -138,7 +153,7 @@ export default function ProjectCard({
           {/* Floating badge if real media present */}
           {(isVideo || (hasRealAsset && primaryMedia?.url)) && (
             <div className="absolute top-3 right-3 z-10">
-              <span className="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-brand-red text-white shadow-sm whitespace-nowrap">
+              <span className="text-xs font-black uppercase px-2.5 py-1 rounded-full bg-brand-red text-white shadow-sm whitespace-nowrap">
                 Sample layout
               </span>
             </div>
@@ -146,7 +161,7 @@ export default function ProjectCard({
         </div>
 
         {/* Card Content: Title shown ONCE here, flex-1 ensures equal card heights */}
-        <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+        <div className="p-5 min-[360px]:p-6 sm:p-7 flex-1 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between gap-2 mb-2">
               <span className="text-xs font-black text-brand-red uppercase tracking-wider">
@@ -162,29 +177,29 @@ export default function ProjectCard({
               {project.title}
             </h3>
 
-            <p className="text-xs sm:text-sm text-brand-warmgrey mt-2.5 line-clamp-2 leading-relaxed">
+            <p className="text-xs sm:text-sm text-brand-warmgrey mt-2 line-clamp-2 leading-relaxed">
               {project.overview}
             </p>
           </div>
 
           {/* Deliverables tags */}
-          <div className="mt-5 pt-4 border-t border-brand-border flex flex-wrap gap-1.5">
+          <div className="mt-4 sm:mt-5 pt-3 sm:pt-4 border-t border-brand-border flex flex-wrap gap-1.5">
             {project.deliverables.slice(0, 3).map((item, idx) => (
               <span
                 key={idx}
-                className="text-[11px] font-semibold bg-brand-cream text-brand-ink px-2.5 py-1 rounded-full border border-brand-border/70"
+                className="text-xs font-semibold bg-brand-cream text-brand-ink px-2.5 py-1 rounded-full border border-brand-border/70"
               >
                 {item}
               </span>
             ))}
             {project.deliverables.length > 3 && (
-              <span className="text-[11px] font-bold text-brand-warmgrey px-1.5 py-1">
+              <span className="text-xs font-bold text-brand-warmgrey px-1.5 py-1">
                 +{project.deliverables.length - 3} more
               </span>
             )}
           </div>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 }

@@ -31,12 +31,12 @@ export function IntroProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Safety timeout: forces intro to complete after 2.5s even if an animation errors or stalls
-    const safetyTimer = setTimeout(() => {
+    // Hero load animation starts 200ms after mount (no full-screen intro)
+    const timer = setTimeout(() => {
       setIsIntroComplete(true);
-    }, 2500);
+    }, 200);
 
-    return () => clearTimeout(safetyTimer);
+    return () => clearTimeout(timer);
   }, [shouldReduceMotion]);
 
   return (

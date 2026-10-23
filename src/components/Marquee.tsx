@@ -28,7 +28,7 @@ const defaultItems = [
 
 export default function Marquee({
   items = defaultItems,
-  className = "bg-brand-ink text-brand-cream py-5 border-y border-brand-border-dark",
+  className = "h-14 sm:h-16 flex items-center bg-brand-ink text-brand-cream border-y border-brand-border-dark",
 }: MarqueeProps) {
   const baseX = useMotionValue(0);
   const trackRef = useRef<HTMLDivElement>(null);

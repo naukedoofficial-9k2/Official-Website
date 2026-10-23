@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
@@ -9,6 +9,13 @@ import PageTransition from "@/components/motion/PageTransition";
 import IntroAnimation from "@/components/motion/IntroAnimation";
 import { IntroProvider } from "@/context/IntroContext";
 import { siteConfig } from "@/content/site";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#D70406",
+};
 
 const poppins = Poppins({
   subsets: ["latin"],
