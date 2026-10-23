@@ -45,20 +45,29 @@ export default function Navbar() {
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
         isRedHeader
-          ? "bg-brand-red text-white border-b border-white/10 py-5"
-          : "bg-brand-cream/95 backdrop-blur-md text-brand-ink border-b border-brand-border/80 shadow-sm " +
-            (scrolled ? "py-3" : "py-4")
+          ? scrolled
+            ? "bg-brand-red/98 backdrop-blur-md text-white border-b border-white/20 py-2.5 shadow-md"
+            : "bg-brand-red text-white border-b border-white/10 py-5"
+          : scrolled
+          ? "bg-brand-cream/98 backdrop-blur-md text-brand-ink border-b border-brand-border py-2.5 shadow-md"
+          : "bg-brand-cream/95 backdrop-blur-md text-brand-ink border-b border-brand-border/80 py-4 sm:py-5 shadow-sm"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         
-        {/* Brand Logo - Official SVG Wordmark (Larger, exactly once per view) */}
+        {/* Brand Logo - Official SVG Wordmark (Shrinks smoothly on scroll) */}
         <Link
           href="/"
           className="flex items-center group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red rounded-lg"
           aria-label="Nau K Do Home"
         >
-          <div className="relative h-11 w-[128px] sm:h-12 sm:w-[140px] transition-transform duration-200 group-hover:scale-[1.03]">
+          <div
+            className={`relative transition-all duration-300 group-hover:scale-[1.03] ${
+              scrolled
+                ? "h-9 w-[112px] sm:h-9 sm:w-[120px]"
+                : "h-11 w-[128px] sm:h-12 sm:w-[140px]"
+            }`}
+          >
             <Image
               src={isRedHeader ? "/brand/logo-white.svg" : "/brand/logo-red.svg"}
               alt="Nau K Do"

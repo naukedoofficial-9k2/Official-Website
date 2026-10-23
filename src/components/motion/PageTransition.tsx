@@ -7,10 +7,16 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 export default function PageTransition() {
   const pathname = usePathname();
-  const [isPresent, setIsPresent] = useState(true);
+  const [isPresent, setIsPresent] = useState(false);
+  const isFirstMount = React.useRef(true);
   const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
+
     setIsPresent(true);
     const timer = setTimeout(() => {
       setIsPresent(false);

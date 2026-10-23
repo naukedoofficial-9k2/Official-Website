@@ -86,8 +86,13 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
             {project.category}
           </span>
           <span className="text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full bg-white text-brand-ink border border-brand-border whitespace-nowrap">
-            Sample layout
+            {project.type === "placeholder" ? "Sample layout" : project.type}
           </span>
+          {project.client && !project.anonymous && (
+            <span className="text-xs font-mono font-bold text-brand-ink px-3 py-1 rounded-full bg-brand-cream border border-brand-border">
+              Client: {project.client}
+            </span>
+          )}
           {project.clientIndustry && (
             <span className="text-xs text-brand-warmgrey font-bold">
               • {project.clientIndustry}
@@ -108,9 +113,20 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
         <p className="text-base sm:text-lg text-brand-warmgrey leading-relaxed">
           {project.overview}
         </p>
+
+        {project.body && (
+          <div className="p-6 rounded-[20px] bg-brand-cream border border-brand-border/80">
+            <h3 className="text-xs font-mono font-black uppercase tracking-wider text-brand-red mb-2">
+              The Approach
+            </h3>
+            <p className="text-sm sm:text-base text-brand-ink leading-relaxed">
+              {project.body}
+            </p>
+          </div>
+        )}
       </div>
 
-      {/* Media Canvas (Image or MP4 or Clean Graphic - NO FAINT N WATERMARK) */}
+      {/* Media Canvas with Quick Clip-Path Reveal (Animation 3) */}
       <FadeUp>
         <div className="rounded-[20px] bg-white border border-brand-border overflow-hidden shadow-card mb-12">
           <div className="relative aspect-[16/9] bg-brand-cream overflow-hidden flex items-center justify-center">

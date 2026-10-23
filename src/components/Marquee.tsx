@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   motion,
   useScroll,
   useSpring,
-  useTransform,
   useVelocity,
   useAnimationFrame,
   useMotionValue,
@@ -15,7 +14,6 @@ import {
 interface MarqueeProps {
   items?: string[];
   className?: string;
-  baseVelocity?: number;
 }
 
 const defaultItems = [
@@ -31,59 +29,69 @@ const defaultItems = [
 export default function Marquee({
   items = defaultItems,
   className = "bg-brand-ink text-brand-cream py-5 border-y border-brand-border-dark",
-  baseVelocity = -1.2,
 }: MarqueeProps) {
   const baseX = useMotionValue(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const isHoveredRef = useRef(false);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [singleWidth, setSingleWidth] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
   const { scrollY } = useScroll();
   const scrollVelocity = useVelocity(scrollY);
   const smoothVelocity = useSpring(scrollVelocity, {
-    damping: 50,
-    stiffness: 400,
+    damping: 60,
+    stiffness: 300,
   });
 
-  const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 3], {
-    clamp: false,
-  });
+  useEffect(() => {
+    const updateDimensions = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (trackRef.current) {
+        // Measure one set width (one of the copies)
+        const total = trackRef.current.scrollWidth;
+        // We render 4 repeated copies
+        setSingleWidth(total / 4);
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
 
   useAnimationFrame((t, delta) => {
-    if (shouldReduceMotion || isHoveredRef.current) return;
+    if (shouldReduceMotion) return; // Keep static under reduced motion
 
-    let moveBy = baseVelocity * (delta / 16);
-    if (velocityFactor.get() !== 0) {
-      moveBy += velocityFactor.get() * baseVelocity * (delta / 16);
+    // 40 px/s on desktop, 30 px/s on mobile
+    const baseSpeed = isMobile ? 30 : 40; // px per second
+    const speedPerMs = baseSpeed / 1000;
+
+    // Gentle scroll velocity nudge: maximum +30% boost, never changes direction
+    const rawVelocity = Math.abs(smoothVelocity.get());
+    const nudge = Math.min(0.3, rawVelocity / 2000);
+    const effectiveSpeed = speedPerMs * (1 + nudge);
+
+    let nextX = baseX.get() - effectiveSpeed * delta;
+
+    if (singleWidth > 0 && nextX <= -singleWidth) {
+      nextX += singleWidth;
     }
 
-    baseX.set(baseX.get() + moveBy);
-    // Wrap around at -50%
-    if (baseX.get() <= -50) {
-      baseX.set(0);
-    } else if (baseX.get() > 0) {
-      baseX.set(-50);
-    }
+    baseX.set(nextX);
   });
-
-  const xTransform = useTransform(baseX, (v) => `${v}%`);
 
   const duplicatedItems = [...items, ...items, ...items, ...items];
 
   return (
-    <div
-      ref={containerRef}
-      onMouseEnter={() => (isHoveredRef.current = true)}
-      onMouseLeave={() => (isHoveredRef.current = false)}
-      className={`overflow-hidden select-none relative ${className}`}
-    >
+    <div className={`overflow-hidden select-none relative ${className}`}>
       <motion.div
-        style={shouldReduceMotion ? undefined : { x: xTransform }}
+        ref={trackRef}
+        style={{ x: baseX }}
         className="flex items-center gap-8 whitespace-nowrap will-change-transform"
       >
         {duplicatedItems.map((item, idx) => (
           <div key={idx} className="flex items-center gap-8">
-            <span className="text-base sm:text-xl font-black uppercase tracking-wider">
+            <span className="text-base sm:text-xl font-black uppercase tracking-wider text-white">
               {item}
             </span>
             <span className="w-2.5 h-2.5 rounded-full bg-brand-red flex-shrink-0" />

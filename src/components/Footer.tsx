@@ -11,9 +11,9 @@ export default function Footer() {
     <footer className="w-full bg-brand-ink text-brand-cream py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-t border-brand-border-dark">
       <div className="max-w-7xl mx-auto flex flex-col gap-12 sm:gap-16">
         
-        {/* Top Row: Logo, Tagline & Direct WhatsApp Action */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 pb-12 border-b border-white/10">
-          <div className="space-y-4 max-w-lg">
+        {/* Top Row: Logo & Tagline (Large WhatsApp button removed as per v3 brief) */}
+        <div className="pb-12 border-b border-white/10">
+          <div className="space-y-4 max-w-xl">
             <Link href="/" className="inline-block group focus:outline-none" aria-label="Nau K Do Home">
               <div className="relative h-11 w-[128px] transition-transform duration-200 group-hover:scale-[1.03]">
                 <Image
@@ -27,25 +27,13 @@ export default function Footer() {
             <p className="text-xl sm:text-2xl font-black text-white tracking-tight">
               {siteConfig.tagline}
             </p>
-            <p className="text-sm text-brand-cream/70 leading-relaxed max-w-md">
+            <p className="text-sm text-brand-cream/70 leading-relaxed max-w-lg">
               Social-first creative agency. Content, shoots, reels, brand identity, and fast websites for ambitious brands in India and Western markets.
             </p>
           </div>
-
-          <div>
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 bg-brand-red hover:bg-brand-red-hover text-white font-black text-sm px-7 py-3.5 rounded-full shadow-sticker transition-all duration-200 hover:scale-105 active:scale-95"
-            >
-              <MessageCircle className="w-4 h-4 fill-white/20" />
-              <span>Chat on WhatsApp (+91 98293 96397)</span>
-            </a>
-          </div>
         </div>
 
-        {/* Middle Row: Navigation Links & Connect (Removed duplicate Process column!) */}
+        {/* Middle Row: Navigation Links & Connect */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-sm">
           <div>
             <span className="text-xs uppercase tracking-widest text-brand-red font-black block mb-4">
@@ -125,10 +113,23 @@ export default function Footer() {
                 className="flex items-center gap-2 text-brand-cream/80 hover:text-white transition-colors"
               >
                 <MessageCircle className="w-4 h-4 text-brand-red" />
-                <span>WhatsApp: +91 98293 96397</span>
+                <span>WhatsApp: {siteConfig.whatsappDisplay}</span>
               </a>
 
-              {/* Render email and instagram ONLY when configured in content/site.ts */}
+              {/* Instagram link in footer */}
+              {siteConfig.instagram && (
+                <a
+                  href={siteConfig.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-brand-cream/80 hover:text-white transition-colors"
+                >
+                  <Instagram className="w-4 h-4 text-brand-red" />
+                  <span>Instagram</span>
+                </a>
+              )}
+
+              {/* Email only if configured */}
               {siteConfig.email && (
                 <a
                   href={`mailto:${siteConfig.email}`}
@@ -136,18 +137,6 @@ export default function Footer() {
                 >
                   <Mail className="w-4 h-4 text-brand-red" />
                   <span>{siteConfig.email}</span>
-                </a>
-              )}
-
-              {siteConfig.instagram && (
-                <a
-                  href={`https://instagram.com/${siteConfig.instagram}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-brand-cream/80 hover:text-white transition-colors"
-                >
-                  <Instagram className="w-4 h-4 text-brand-red" />
-                  <span>@{siteConfig.instagram}</span>
                 </a>
               )}
             </div>

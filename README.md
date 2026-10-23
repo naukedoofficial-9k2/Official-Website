@@ -76,7 +76,7 @@ Controls company metadata, WhatsApp contact number, prefilled chat message, and 
 export const siteConfig = {
   name: "Nau K Do",
   tagline: "Loud, on purpose.",
-  whatsapp: "919829396397", // Your 10 or 12 digit WhatsApp number
+  whatsapp: "919929946223", // Your 10 or 12 digit WhatsApp number
   whatsappMessage: "Hi Nau K Do! I would love to talk about our brand and content.",
   email: null, // Set to your email (e.g. "hello@naukdo.com") to display email buttons
   instagram: null, // Set to handle (e.g. "naukdo") to display Instagram link

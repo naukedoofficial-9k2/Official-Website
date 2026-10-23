@@ -82,15 +82,47 @@ export default function WorkPage() {
           })}
         </div>
 
-        {/* Bento / Masonry Grid with Smooth AnimatePresence Reshuffle */}
+        {/* Bento / Masonry Grid with Smooth AnimatePresence Reshuffle (No Orphan Tiles, Full Width Rows) */}
         <motion.div
           layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+          className="grid grid-cols-1 md:grid-cols-6 gap-6 sm:gap-8"
         >
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project, idx) => {
-              // Make first item larger when viewing All to create varied Bento balance
-              const isLarge = selectedCategory === "All" && idx === 0;
+              const total = filteredProjects.length;
+              let colSpan = "md:col-span-3";
+              let isLarge = false;
+
+              if (total === 1) {
+                colSpan = "md:col-span-6";
+                isLarge = true;
+              } else if (total === 2 || total === 4) {
+                colSpan = "md:col-span-3";
+                isLarge = total === 2;
+              } else if (total === 3) {
+                colSpan = "md:col-span-2";
+              } else if (total === 5) {
+                colSpan = idx < 2 ? "md:col-span-3" : "md:col-span-2";
+                isLarge = idx < 2;
+              } else if (total === 6) {
+                if (idx < 2) {
+                  colSpan = "md:col-span-3";
+                  isLarge = true;
+                } else if (idx < 5) {
+                  colSpan = "md:col-span-2";
+                } else {
+                  colSpan = "md:col-span-6";
+                  isLarge = true;
+                }
+              } else {
+                // If odd number, span the final card full width so no tile is left alone in a row
+                if (idx === total - 1 && total % 2 !== 0) {
+                  colSpan = "md:col-span-6";
+                  isLarge = true;
+                } else {
+                  colSpan = "md:col-span-3";
+                }
+              }
 
               return (
                 <motion.div
@@ -100,7 +132,7 @@ export default function WorkPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                  className={isLarge ? "md:col-span-2 md:row-span-2" : ""}
+                  className={`col-span-1 ${colSpan} flex flex-col`}
                 >
                   <ProjectCard project={project} priority={idx === 0} isLarge={isLarge} />
                 </motion.div>

@@ -38,7 +38,7 @@ const steps: Step[] = [
   {
     step: "04",
     name: "Post",
-    headline: "Live and active.",
+    headline: "Live on your feeds.",
     description: "Consistent posting, clean captions, and fast, good-looking websites that feel effortless on mobile.",
     icon: <Send className="w-5 h-5 text-brand-red" />,
   },
@@ -67,7 +67,7 @@ export default function ProcessCards() {
             key={idx}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10% 0px" }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ delay: idx * 0.08, duration: 0.45 }}
             whileHover={{ y: -4, transition: { duration: 0.2 } }}
             className="bg-white rounded-[20px] p-6 border border-brand-border flex flex-col justify-between transition-shadow hover:shadow-card hover:border-brand-red/30 group"

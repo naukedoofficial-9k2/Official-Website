@@ -132,7 +132,7 @@ export default function AboutPage() {
             <RevealText
               text="How we work every day."
               as="h2"
-              className="text-3xl sm:text-5xl font-black text-brand-ink tracking-tight"
+              className="text-3xl sm:text-5xl font-black text-brand-ink tracking-tight pb-2 leading-tight"
             />
           </div>
 
@@ -140,16 +140,16 @@ export default function AboutPage() {
             {principles.map((item, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-10% 0px" }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{ delay: idx * 0.1, duration: 0.45 }}
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 className="bg-white rounded-[20px] p-8 border border-brand-border flex flex-col justify-between shadow-sm transition-shadow hover:shadow-card hover:border-brand-red/30"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs font-mono font-black text-brand-red px-3 py-1 rounded-full bg-brand-cream">
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="text-xs font-mono font-black text-brand-red px-3 py-1 rounded-full bg-brand-cream border border-brand-border">
                       0{idx + 1}
                     </span>
                     <div className="p-2.5 rounded-full bg-brand-cream">
@@ -157,10 +157,10 @@ export default function AboutPage() {
                     </div>
                   </div>
 
-                  <h3 className="text-2xl font-black text-brand-ink mb-1">
+                  <h3 className="text-2xl font-black text-brand-ink mb-2.5 leading-snug">
                     {item.title}
                   </h3>
-                  <p className="text-xs font-bold text-brand-red mb-3">
+                  <p className="text-xs sm:text-sm font-bold text-brand-red mb-4 leading-normal">
                     {item.tagline}
                   </p>
                 </div>

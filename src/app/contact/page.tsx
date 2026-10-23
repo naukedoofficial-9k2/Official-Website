@@ -92,7 +92,7 @@ export default function ContactPage() {
                 Direct Line
               </span>
               <div className="text-2xl sm:text-3xl font-black text-brand-ink">
-                +91 98293 96397
+                {siteConfig.whatsappDisplay}
               </div>
 
               <MagneticButton className="w-full">
@@ -111,7 +111,7 @@ export default function ContactPage() {
           </div>
         </motion.div>
 
-        {/* What Happens Next (3 Simple Steps with Stagger) */}
+        {/* What Happens Next (3 Simple Steps with Stagger - Fully Visible, No Clipping) */}
         <div className="mb-16">
           <div className="max-w-2xl mb-12">
             <span className="text-xs font-mono font-black uppercase tracking-wider text-brand-red block mb-1">
@@ -120,7 +120,7 @@ export default function ContactPage() {
             <RevealText
               text="What happens next"
               as="h2"
-              className="text-3xl sm:text-5xl font-black text-brand-ink tracking-tight"
+              className="text-3xl sm:text-5xl font-black text-brand-ink tracking-tight pb-2"
             />
           </div>
 
@@ -128,11 +128,11 @@ export default function ContactPage() {
             {nextSteps.map((step, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-10% 0px" }}
-                transition={{ delay: idx * 0.12, duration: 0.45 }}
-                className="bg-white rounded-[20px] p-8 border border-brand-border flex flex-col justify-between shadow-sm"
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ delay: idx * 0.1, duration: 0.45 }}
+                className="bg-white rounded-[20px] p-8 border border-brand-border flex flex-col justify-between shadow-sm transition-shadow hover:shadow-card hover:border-brand-red/30"
               >
                 <div>
                   <span className="text-xs font-mono font-black text-brand-red px-3 py-1 rounded-full bg-brand-cream border border-brand-border inline-block mb-5">
@@ -152,33 +152,20 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* If email or Instagram are set, show their buttons. If not, show nothing about them. */}
-        {(siteConfig.email || siteConfig.instagram) && (
+        {/* Optional Email link only if configured; Instagram strictly restricted to footer as per v3 brief */}
+        {siteConfig.email && (
           <div className="rounded-[20px] bg-brand-cream border border-brand-border p-8 mb-12">
             <h3 className="text-lg font-black text-brand-ink mb-4">
               Other ways to connect
             </h3>
             <div className="flex flex-wrap gap-4">
-              {siteConfig.email && (
-                <a
-                  href={`mailto:${siteConfig.email}`}
-                  className="inline-flex items-center gap-2 bg-white text-brand-ink px-6 py-3 rounded-full text-sm font-bold border border-brand-border hover:border-brand-red transition-colors"
-                >
-                  <Mail className="w-4 h-4 text-brand-red" />
-                  <span>{siteConfig.email}</span>
-                </a>
-              )}
-              {siteConfig.instagram && (
-                <a
-                  href={`https://instagram.com/${siteConfig.instagram}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-white text-brand-ink px-6 py-3 rounded-full text-sm font-bold border border-brand-border hover:border-brand-red transition-colors"
-                >
-                  <Instagram className="w-4 h-4 text-brand-red" />
-                  <span>@{siteConfig.instagram}</span>
-                </a>
-              )}
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="inline-flex items-center gap-2 bg-white text-brand-ink px-6 py-3 rounded-full text-sm font-bold border border-brand-border hover:border-brand-red transition-colors"
+              >
+                <Mail className="w-4 h-4 text-brand-red" />
+                <span>{siteConfig.email}</span>
+              </a>
             </div>
           </div>
         )}

@@ -26,7 +26,7 @@ export default function StrikethroughText({
       <motion.span
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
-        viewport={{ once: true, margin: "-10% 0px" }}
+        viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.45, delay, ease: [0.22, 1, 0.36, 1] }}
         style={{ transformOrigin: "left" }}
         className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-[2px] bg-brand-red rounded-full"

@@ -52,7 +52,7 @@ const serviceBands = [
     promise: "Fast, good-looking websites that feel effortless.",
     theme: "ink" as const, // ink background
     description:
-      "We design and build websites that feel alive. Instant loading speeds, oversized typography, mobile-first design, and tactile micro-interactions that turn social buzz into real orders.",
+      "We design and build websites that feel alive. Fast on mobile, oversized typography, mobile-first design, and tactile micro-interactions with fast, good-looking websites that match your content.",
     deliverables: [
       "Custom Digital Flagship & Storefront Design",
       "Fast, Mobile-First Web Development",
@@ -151,7 +151,13 @@ export default function ServicesPage() {
                 {/* Left Side: Number, Title, Promise */}
                 <div className="lg:col-span-6 space-y-5">
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-mono font-black text-brand-red px-3 py-1 rounded-full bg-brand-red/10 border border-brand-red/20">
+                    <span
+                      className={`text-sm sm:text-base font-mono font-black px-3.5 py-1 rounded-full ${
+                        isInk
+                          ? "text-white bg-brand-red border border-white/20 shadow-sm"
+                          : "text-brand-red bg-brand-red/10 border border-brand-red/20"
+                      }`}
+                    >
                       {service.number}
                     </span>
                   </div>
@@ -164,7 +170,7 @@ export default function ServicesPage() {
                     {service.promise}
                   </p>
 
-                  <p className={`text-base leading-relaxed ${isInk ? "text-brand-cream/80" : "text-brand-warmgrey"}`}>
+                  <p className={`text-base leading-relaxed ${isInk ? "text-brand-cream/90" : "text-brand-warmgrey"}`}>
                     {service.description}
                   </p>
 
@@ -187,11 +193,11 @@ export default function ServicesPage() {
                 <div
                   className={`lg:col-span-6 rounded-[20px] p-8 sm:p-10 border ${
                     isInk
-                      ? "bg-white/5 border-white/10"
+                      ? "bg-[#1E1E1E] border-white/20 shadow-xl"
                       : "bg-brand-cream border-brand-border shadow-sm"
                   }`}
                 >
-                  <h3 className={`text-xs font-mono font-black uppercase tracking-wider mb-6 ${isInk ? "text-brand-cream/60" : "text-brand-warmgrey"}`}>
+                  <h3 className={`text-xs font-mono font-black uppercase tracking-wider mb-6 ${isInk ? "text-white" : "text-brand-warmgrey"}`}>
                     What You Get
                   </h3>
 
@@ -201,14 +207,14 @@ export default function ServicesPage() {
                         key={dIdx}
                         initial={{ opacity: 0, x: -12 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, margin: "-10% 0px" }}
+                        viewport={{ once: true, amount: 0.1 }}
                         transition={{ delay: 0.15 + dIdx * 0.08, duration: 0.35 }}
                         className="flex items-start gap-3.5 text-sm sm:text-base font-semibold"
                       >
                         <motion.div
                           initial={{ scale: 0 }}
                           whileInView={{ scale: 1 }}
-                          viewport={{ once: true }}
+                          viewport={{ once: true, amount: 0.1 }}
                           transition={{
                             type: "spring",
                             stiffness: 300,
@@ -218,7 +224,7 @@ export default function ServicesPage() {
                         >
                           <CheckCircle2 className="w-5 h-5 text-brand-red flex-shrink-0 mt-0.5" />
                         </motion.div>
-                        <span className={isInk ? "text-brand-cream" : "text-brand-ink"}>
+                        <span className={isInk ? "text-white" : "text-brand-ink"}>
                           {item}
                         </span>
                       </motion.li>

@@ -54,10 +54,6 @@
   animation: marquee 28s linear infinite;
 }
 
-.animate-marquee:hover {
-  animation-play-state: paused;
-}
-
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
