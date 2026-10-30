@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle } from "lucide-react";
-import { projects } from "@/content/projects";
+import { Project } from "@/content/projects";
 import { getWhatsAppUrl } from "@/content/site";
 import ProjectCard from "@/components/ProjectCard";
 import RevealText from "@/components/motion/RevealText";
@@ -12,8 +12,18 @@ import MagneticButton from "@/components/motion/MagneticButton";
 
 const categories = ["All", "Social", "Shoots", "Web", "Branding", "Motion"] as const;
 
-export default function WorkPage() {
+interface WorkPageClientProps {
+  projects: Project[];
+  isSampleData: boolean;
+}
+
+export default function WorkPageClient({ projects, isSampleData }: WorkPageClientProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+
+  // Filters with no projects behind them would only show an empty grid
+  const visibleCategories = categories.filter(
+    (cat) => cat === "All" || projects.some((p) => p.category === cat)
+  );
 
   const filteredProjects =
     selectedCategory === "All"
@@ -21,7 +31,7 @@ export default function WorkPage() {
       : projects.filter((p) => p.category === selectedCategory);
 
   const whatsappHref = getWhatsAppUrl(
-    "Hi Nau K Do! I am browsing your sample work and would love to chat about a project."
+    `Hi Nau K Do! I am browsing your ${isSampleData ? "sample " : ""}work and would love to chat about a project.`
   );
 
   return (
@@ -45,17 +55,19 @@ export default function WorkPage() {
 
           <FadeUp delay={0.2}>
             <p className="mt-3 sm:mt-4 text-base sm:text-xl text-brand-cream/80 max-w-2xl leading-relaxed">
-              A peek at the kind of work we make. Real projects land here soon.
+              A peek at the kind of work we make.{isSampleData && " Real projects land here soon."}
             </p>
           </FadeUp>
 
           {/* Simple One-line Note without wrapping */}
-          <FadeUp delay={0.3}>
-            <div className="mt-4 sm:mt-6 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs text-brand-cream/80 font-semibold whitespace-nowrap">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-red" />
-              <span>Sample layouts. Real projects coming soon.</span>
-            </div>
-          </FadeUp>
+          {isSampleData && (
+            <FadeUp delay={0.3}>
+              <div className="mt-4 sm:mt-6 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs text-brand-cream/80 font-semibold whitespace-nowrap">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-red" />
+                <span>Sample layouts. Real projects coming soon.</span>
+              </div>
+            </FadeUp>
+          )}
         </div>
       </section>
 
@@ -66,7 +78,7 @@ export default function WorkPage() {
         <div className="sticky top-[52px] sm:top-[64px] z-30 bg-brand-cream/95 backdrop-blur-md pt-3 pb-3 -mt-3 mb-8 sm:mb-12 border-b border-brand-border/60">
           <div className="relative">
             <div className="flex items-center gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory -mx-4 px-4 min-[361px]:-mx-5 min-[361px]:px-5 sm:mx-0 sm:px-0">
-              {categories.map((cat) => {
+              {visibleCategories.map((cat) => {
                 const isSelected = selectedCategory === cat;
                 return (
                   <button

@@ -19,6 +19,7 @@ export interface Project {
   client?: string;
   anonymous?: boolean; // When true, client name is kept hidden
   instagramUrl?: string; // Optional direct Instagram reel/post link
+  youtubeId?: string; // Plays at the top of the project page
   body?: string; // Longer case-study text
   featured?: boolean; // Controls appearance on Home page Bento grid
   tagline?: string;
@@ -202,11 +203,3 @@ export const projects: Project[] = [
     ],
   },
 ];
-
-export function getProjectBySlug(slug: string): Project | undefined {
-  return projects.find((p) => p.slug === slug);
-}
-
-export function getFeaturedProjects(): Project[] {
-  return projects.filter((p) => p.featured);
-}

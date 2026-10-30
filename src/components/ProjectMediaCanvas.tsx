@@ -8,17 +8,21 @@ interface ProjectMediaCanvasProps {
   media?: Project["media"];
   title: string;
   category: string;
+  youtubeId?: string;
 }
 
 export default function ProjectMediaCanvas({
   media,
   title,
   category,
+  youtubeId,
 }: ProjectMediaCanvasProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const primaryMedia = media?.[0];
   const isVideo = primaryMedia?.type === "video";
-  const hasRealAsset = primaryMedia && primaryMedia.url.startsWith("/projects/");
+  const hasRealAsset =
+    primaryMedia &&
+    (primaryMedia.url.startsWith("/projects/") || primaryMedia.url.startsWith("https://cdn.sanity.io/"));
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
@@ -60,7 +64,17 @@ export default function ProjectMediaCanvas({
   return (
     <div className="rounded-[16px] sm:rounded-[20px] bg-white border border-brand-border overflow-hidden shadow-card mb-8 sm:mb-12">
       <div className="relative aspect-[4/3] sm:aspect-[16/9] bg-brand-cream overflow-hidden flex items-center justify-center">
-        {isVideo && primaryMedia?.url ? (
+        {youtubeId ? (
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${youtubeId}?rel=0`}
+            title={`${title} video`}
+            loading="lazy"
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+            className="absolute inset-0 w-full h-full border-0"
+          />
+        ) : isVideo && primaryMedia?.url ? (
           <div className="relative w-full h-full cursor-pointer" onClick={handleVideoTap}>
             <video
               ref={videoRef}

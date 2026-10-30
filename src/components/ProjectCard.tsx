@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import { Project } from "@/content/projects";
 
 interface ProjectCardProps {
@@ -19,11 +19,14 @@ export default function ProjectCard({
   isLarge = false,
 }: ProjectCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
+  // Observe the unclipped wrapper: Chrome reports a fully clipped element as 0% visible
+  const isMediaInView = useInView(mediaRef, { once: true, amount: 0.1 });
   const shouldReduceMotion = useReducedMotion();
   const [isPlaying, setIsPlaying] = useState(false);
   const primaryMedia = project.media?.[0];
   const isVideo = primaryMedia?.type === "video";
-  const hasRealAsset = primaryMedia && (primaryMedia.url.startsWith("/projects/") || primaryMedia.url.startsWith("/brand/"));
+  const hasRealAsset = primaryMedia && (primaryMedia.url.startsWith("/projects/") || primaryMedia.url.startsWith("/brand/") || primaryMedia.url.startsWith("https://cdn.sanity.io/"));
 
   // Mobile in-view autoplay and out-of-view pause
   useEffect(() => {
@@ -87,6 +90,7 @@ export default function ProjectCard({
       >
         {/* Media or Visual Slot: 4:3 on phones for tall cinematic presence, 16:10 or 16:9 on desktop */}
         <div
+          ref={mediaRef}
           className={`relative bg-brand-cream overflow-hidden border-b border-brand-border flex items-center justify-center ${
             isLarge
               ? "aspect-[4/3] sm:aspect-[16/9]"
@@ -95,8 +99,7 @@ export default function ProjectCard({
         >
           <motion.div
             initial={shouldReduceMotion ? undefined : { clipPath: "inset(0 0 100% 0)" }}
-            whileInView={{ clipPath: "inset(0 0 0% 0)" }}
-            viewport={{ once: true, amount: 0.1 }}
+            animate={isMediaInView ? { clipPath: "inset(0 0 0% 0)" } : undefined}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
             className="w-full h-full relative"
           >
@@ -151,7 +154,7 @@ export default function ProjectCard({
           </motion.div>
 
           {/* Floating badge if real media present */}
-          {(isVideo || (hasRealAsset && primaryMedia?.url)) && (
+          {project.type === "placeholder" && (isVideo || (hasRealAsset && primaryMedia?.url)) && (
             <div className="absolute top-3 right-3 z-10">
               <span className="text-xs font-black uppercase px-2.5 py-1 rounded-full bg-brand-red text-white shadow-sm whitespace-nowrap">
                 Sample layout

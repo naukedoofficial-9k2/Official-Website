@@ -1,9 +1,10 @@
 import { MetadataRoute } from "next";
-import { projects } from "@/content/projects";
 import { siteConfig } from "@/content/site";
+import { getProjects } from "@/sanity/projects";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.url;
+  const projects = await getProjects();
 
   const routes = [
     "",

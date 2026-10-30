@@ -85,8 +85,12 @@ export const siteConfig = {
 ```
 *Note: In compliance with brand guidelines, email and Instagram links only render when a real value is provided.*
 
-### 2. Projects & Portfolio (`/content/projects.ts`)
-All projects are currently set up as honest sample layouts (`type: "placeholder"` with "Sample layout" badges). To replace with a real client case study:
+### 2. Projects & Portfolio (Sanity Studio)
+Real projects are managed at `/studio` and stored in Sanity. Publishing or unpublishing refreshes the site through the signed webhook at `/api/revalidate`.
+
+Local setup: copy `.env.example` to `.env.local`, then run `npm run dev -- -p 3333`. Studio login works locally only on port 3333, the allowed CORS origin.
+
+The samples in `/content/projects.ts` show only while no project is published. The first published project replaces them all. To edit a sample by hand:
 1. Open `/content/projects.ts`.
 2. Update the project object:
    - `slug`: unique URL identifier

@@ -3,9 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ArrowLeft, ArrowRight, MessageCircle, CheckCircle2 } from "lucide-react";
-import { projects, getProjectBySlug } from "@/content/projects";
+import { getProjects } from "@/sanity/projects";
 import { siteConfig, getWhatsAppUrl } from "@/content/site";
 import ProjectMediaCanvas from "@/components/ProjectMediaCanvas";
+import ProjectGallery from "@/components/ProjectGallery";
 import FadeUp from "@/components/motion/FadeUp";
 import MagneticButton from "@/components/motion/MagneticButton";
 
@@ -16,6 +17,8 @@ interface ProjectPageProps {
 }
 
 export async function generateStaticParams() {
+  const projects = await getProjects();
+
   return projects.map((p) => ({
     slug: p.slug,
   }));
@@ -25,7 +28,8 @@ export async function generateMetadata({
   params,
 }: ProjectPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  const projects = await getProjects();
+  const project = projects.find((p) => p.slug === slug);
 
   if (!project) {
     return {
@@ -39,13 +43,15 @@ export async function generateMetadata({
     openGraph: {
       title: `${project.title} | ${siteConfig.name}`,
       description: project.overview,
+      images: project.media[0] ? [project.media[0].url] : undefined,
     },
   };
 }
 
 export default async function ProjectDetailPage({ params }: ProjectPageProps) {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  const projects = await getProjects();
+  const project = projects.find((p) => p.slug === slug);
 
   if (!project) {
     notFound();
@@ -80,6 +86,13 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
         media={project.media}
         title={project.title}
         category={project.category}
+        youtubeId={project.youtubeId}
+      />
+
+      {/* Extra images. The first media item is already shown above unless a video replaces it */}
+      <ProjectGallery
+        media={project.youtubeId ? project.media : project.media.slice(1)}
+        title={project.title}
       />
 
       {/* 2. Title, Category, Tagline & Overview */}
@@ -88,9 +101,11 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
           <span className="text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full bg-brand-red text-white shadow-sm whitespace-nowrap">
             {project.category}
           </span>
-          <span className="text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full bg-white text-brand-ink border border-brand-border whitespace-nowrap">
-            {project.type === "placeholder" ? "Sample layout" : project.type}
-          </span>
+          {project.type === "placeholder" && (
+            <span className="text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full bg-white text-brand-ink border border-brand-border whitespace-nowrap">
+              Sample layout
+            </span>
+          )}
           {project.client && !project.anonymous && (
             <span className="text-xs font-mono font-bold text-brand-ink px-3 py-1 rounded-full bg-brand-cream border border-brand-border">
               Client: {project.client}

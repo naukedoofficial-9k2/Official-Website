@@ -6,7 +6,7 @@ import Link from "next/link";
 import { MessageCircle, ArrowRight, ArrowUpRight } from "lucide-react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { siteConfig, getWhatsAppUrl } from "@/content/site";
-import { getFeaturedProjects } from "@/content/projects";
+import { Project } from "@/content/projects";
 import Marquee from "@/components/Marquee";
 import HeroStickers from "@/components/HeroStickers";
 import ProjectCard from "@/components/ProjectCard";
@@ -16,8 +16,12 @@ import RevealText from "@/components/motion/RevealText";
 import FadeUp from "@/components/motion/FadeUp";
 import { useIntro } from "@/context/IntroContext";
 
-export default function HomePage() {
-  const featuredProjects = getFeaturedProjects();
+interface HomePageClientProps {
+  featuredProjects: Project[];
+  isSampleData: boolean;
+}
+
+export default function HomePageClient({ featuredProjects, isSampleData }: HomePageClientProps) {
   const heroRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
   const { isIntroComplete } = useIntro();
@@ -186,7 +190,7 @@ export default function HomePage() {
 
           {/* Floating / Swipeable Sticker Tiles */}
           <div className="pt-2 sm:pt-4 border-t border-white/15">
-            <HeroStickers />
+            <HeroStickers linkToProjects={isSampleData} />
           </div>
         </motion.div>
 
@@ -212,9 +216,11 @@ export default function HomePage() {
               as="h2"
               className="section-fluid-heading font-black text-brand-ink tracking-tight pb-1"
             />
-            <p className="text-xs sm:text-sm text-brand-warmgrey mt-1 sm:mt-2">
-              Sample layouts. Real projects coming soon.
-            </p>
+            {isSampleData && (
+              <p className="text-xs sm:text-sm text-brand-warmgrey mt-1 sm:mt-2">
+                Sample layouts. Real projects coming soon.
+              </p>
+            )}
           </div>
 
           <Link

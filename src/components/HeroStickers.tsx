@@ -61,7 +61,11 @@ const stickerConfigs: StickerConfig[] = [
   },
 ];
 
-export default function HeroStickers() {
+interface HeroStickersProps {
+  linkToProjects: boolean;
+}
+
+export default function HeroStickers({ linkToProjects }: HeroStickersProps) {
   const shouldReduceMotion = useReducedMotion();
   const { isIntroComplete } = useIntro();
   const [isMobile, setIsMobile] = useState(false);
@@ -147,7 +151,7 @@ export default function HeroStickers() {
               className="flex-shrink-0 w-[74%] min-[380px]:w-[72%] md:w-auto snap-center relative"
             >
               <Link
-                href={project ? `/work/${project.slug}` : "/work"}
+                href={project && linkToProjects ? `/work/${project.slug}` : "/work"}
                 className={`group block w-full rounded-[20px] p-4 sm:p-5 border transition-all duration-300 shadow-card select-none overflow-hidden relative tap-bounce active:scale-[0.98] ${
                   isReel ? "aspect-[9/16]" : "aspect-square"
                 } ${
