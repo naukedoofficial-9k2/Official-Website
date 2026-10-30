@@ -8,7 +8,7 @@ export interface SiteConfig {
   whatsappMessage: string;
   email: string | null; // Set to string (e.g., "hello@naukdo.com") to display email buttons; null hides them
   instagram: string | null; // "https://www.instagram.com/naukedo/"
-  url: string; // "https://official-website-ten-ebon.vercel.app"
+  url: string; // "https://www.naukedo.com"
   location: string;
   nameStory?: string | null; // Optional: real story behind the name; hidden when null or empty
 }
@@ -24,7 +24,7 @@ export const siteConfig: SiteConfig = {
   whatsappMessage: "Hi Nau K Do! I would love to talk about our brand and content.",
   email: null,
   instagram: "https://www.instagram.com/naukedo/",
-  url: "https://official-website-ten-ebon.vercel.app",
+  url: "https://www.naukedo.com",
   location: "India & Western Markets",
   nameStory: null,
 };

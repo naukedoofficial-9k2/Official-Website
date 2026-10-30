@@ -1,6 +1,10 @@
 import HomePageClient from "@/components/HomePageClient";
 import { getProjects } from "@/sanity/projects";
 
+export const metadata = {
+  alternates: { canonical: "/" },
+};
+
 export default async function HomePage() {
   const projects = await getProjects();
   const featured = projects.filter((p) => p.featured);

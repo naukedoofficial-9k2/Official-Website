@@ -64,6 +64,8 @@ export default function ProjectCard({
 
   const handleVideoTap = (e: React.MouseEvent) => {
     if (isVideo && videoRef.current) {
+      // The card is a link, so stop the tap from also opening the project
+      e.preventDefault();
       // Toggle play/pause on tap
       if (videoRef.current.paused) {
         videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 
 interface RevealTextProps {
@@ -16,18 +16,9 @@ export default function RevealText({
   as: Component = "h2",
   delay = 0,
 }: RevealTextProps) {
-  const [mounted, setMounted] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   const words = text.split(" ");
-
-  if (!mounted || shouldReduceMotion) {
-    return <Component className={className}>{text}</Component>;
-  }
 
   const container: Variants = {
     hidden: { opacity: 0 },
@@ -41,11 +32,13 @@ export default function RevealText({
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        type: "spring" as const,
-        damping: 18,
-        stiffness: 140,
-      },
+      transition: shouldReduceMotion
+        ? { duration: 0 }
+        : {
+            type: "spring" as const,
+            damping: 18,
+            stiffness: 140,
+          },
     },
     hidden: {
       opacity: 0,

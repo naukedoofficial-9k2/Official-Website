@@ -14,6 +14,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const drawerRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const isHome = pathname === "/";
   // On home at top, header blends with full-bleed red hero
@@ -28,15 +30,32 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Lock body scroll and handle Escape key when mobile drawer is open
+  // Lock body scroll, trap focus and handle Escape key when mobile drawer is open
   useEffect(() => {
     if (mobileMenuOpen) {
       const originalOverflow = document.body.style.overflow;
+      const menuButton = menuButtonRef.current;
       document.body.style.overflow = "hidden";
+      closeButtonRef.current?.focus();
 
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape") {
           setMobileMenuOpen(false);
+          return;
+        }
+
+        if (e.key !== "Tab" || !drawerRef.current) return;
+
+        const focusable = drawerRef.current.querySelectorAll<HTMLElement>("a[href], button");
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
         }
       };
 
@@ -44,6 +63,7 @@ export default function Navbar() {
       return () => {
         document.body.style.overflow = originalOverflow;
         window.removeEventListener("keydown", handleKeyDown);
+        menuButton?.focus();
       };
     }
   }, [mobileMenuOpen]);
@@ -73,15 +93,20 @@ export default function Navbar() {
         className={`sticky top-0 z-40 w-full transition-all duration-300 pt-safe ${
           isRedHeader
             ? scrolled
-              ? "bg-brand-red/98 backdrop-blur-md text-white border-b border-white/20 py-2 sm:py-2.5 shadow-md"
-              : "bg-brand-red text-white border-b border-white/10 py-3 sm:py-5"
+              ? "bg-brand-red/98 backdrop-blur-md text-white border-b border-white/20 shadow-md"
+              : "bg-brand-red text-white border-b border-white/10"
             : scrolled
-            ? "bg-brand-cream/98 backdrop-blur-md text-brand-ink border-b border-brand-border py-2 sm:py-2.5 shadow-md"
-            : "bg-brand-cream/95 backdrop-blur-md text-brand-ink border-b border-brand-border/80 py-3 sm:py-4 shadow-sm"
+            ? "bg-brand-cream/98 backdrop-blur-md text-brand-ink border-b border-brand-border shadow-md"
+            : "bg-brand-cream/95 backdrop-blur-md text-brand-ink border-b border-brand-border/80 shadow-sm"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 min-[361px]:px-5 sm:px-6 lg:px-8 flex items-center justify-between">
-          
+        {/* Vertical padding lives here because pt-safe on the header overrides py-* */}
+        <div
+          className={`max-w-7xl mx-auto px-4 min-[361px]:px-5 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-300 ${
+            scrolled ? "py-2 sm:py-2.5" : isRedHeader ? "py-3 sm:py-5" : "py-3 sm:py-4"
+          }`}
+        >
+
           {/* Brand Logo - 28 to 32px on mobile, shrinks slightly on scroll */}
           <Link
             href="/"
@@ -119,7 +144,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`relative px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${
+                  className={`relative isolate px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${
                     active
                       ? isRedHeader
                         ? "text-brand-red"
@@ -181,6 +206,7 @@ export default function Navbar() {
             </a>
 
             <button
+              ref={menuButtonRef}
               onClick={() => setMobileMenuOpen(true)}
               className={`h-11 w-11 rounded-full flex items-center justify-center tap-bounce active:scale-95 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red ${
                 isRedHeader
@@ -208,6 +234,7 @@ export default function Navbar() {
             className="fixed inset-0 z-50 md:hidden bg-brand-ink/40 backdrop-blur-sm"
             onClick={() => setMobileMenuOpen(false)}
             aria-modal="true"
+            aria-label="Navigation menu"
             role="dialog"
           >
             <motion.div
@@ -216,7 +243,7 @@ export default function Navbar() {
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 28, stiffness: 280 }}
               onClick={(e) => e.stopPropagation()}
-              className="absolute inset-y-0 right-0 w-full max-w-[400px] bg-brand-cream text-brand-ink shadow-2xl flex flex-col justify-between p-5 min-[360px]:p-6 pt-safe pb-safe overflow-y-auto"
+              className="absolute inset-y-0 right-0 w-full max-w-[400px] bg-brand-cream text-brand-ink shadow-2xl flex flex-col justify-between px-5 min-[360px]:px-6 pt-[calc(env(safe-area-inset-top,0px)+1.25rem)] pb-[calc(env(safe-area-inset-bottom,0px)+1.25rem)] min-[360px]:pt-[calc(env(safe-area-inset-top,0px)+1.5rem)] min-[360px]:pb-[calc(env(safe-area-inset-bottom,0px)+1.5rem)] overflow-y-auto"
             >
               {/* Drawer Header */}
               <div className="flex items-center justify-between pb-6 border-b border-brand-border">
@@ -238,6 +265,7 @@ export default function Navbar() {
                 </Link>
 
                 <button
+                  ref={closeButtonRef}
                   onClick={() => setMobileMenuOpen(false)}
                   className="h-11 w-11 rounded-full bg-white border border-brand-border flex items-center justify-center text-brand-ink hover:text-brand-red tap-bounce active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red"
                   aria-label="Close menu"

@@ -52,7 +52,7 @@ const serviceBands = [
     promise: "Fast, good-looking websites that feel effortless.",
     theme: "ink" as const, // ink background
     description:
-      "We design and build websites that feel alive. Fast on mobile, oversized typography, mobile-first design, and tactile micro-interactions with fast, good-looking websites that match your content.",
+      "We design and build websites that feel alive. Fast on mobile, oversized typography, mobile-first design, and tactile micro-interactions that match your content.",
     deliverables: [
       "Custom Digital Flagship & Storefront Design",
       "Fast, Mobile-First Web Development",

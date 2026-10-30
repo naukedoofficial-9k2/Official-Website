@@ -46,18 +46,21 @@ export default function Marquee({
   useEffect(() => {
     const updateDimensions = () => {
       setIsMobile(window.innerWidth < 768);
-      if (trackRef.current) {
-        // Measure one set width (one of the copies)
-        const total = trackRef.current.scrollWidth;
-        // We render 4 repeated copies
-        setSingleWidth(total / 4);
+      const track = trackRef.current;
+      if (track) {
+        // Distance from the first copy to the second, gaps included
+        const secondCopy = track.children[items.length] as HTMLElement;
+        const firstCopy = track.children[0] as HTMLElement;
+        setSingleWidth(secondCopy.offsetLeft - firstCopy.offsetLeft);
       }
     };
 
     updateDimensions();
+    // Poppins swaps in after first paint and changes the text width
+    document.fonts.ready.then(updateDimensions);
     window.addEventListener("resize", updateDimensions);
     return () => window.removeEventListener("resize", updateDimensions);
-  }, []);
+  }, [items.length]);
 
   useAnimationFrame((t, delta) => {
     if (shouldReduceMotion) return; // Keep static under reduced motion
@@ -83,7 +86,7 @@ export default function Marquee({
   const duplicatedItems = [...items, ...items, ...items, ...items];
 
   return (
-    <div className={`overflow-hidden select-none relative ${className}`}>
+    <div aria-hidden="true" className={`overflow-hidden select-none relative ${className}`}>
       <motion.div
         ref={trackRef}
         style={{ x: baseX }}

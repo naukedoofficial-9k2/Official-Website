@@ -64,7 +64,7 @@ export default function HomePageClient({ featuredProjects, isSampleData }: HomeP
     {
       title: "Website Design & Development",
       badge: "FAST WEBSITES",
-      description: "Fast, good-looking digital storefronts and landing pages built with fast, good-looking websites that match your content.",
+      description: "Fast, good-looking digital storefronts and landing pages that match your content.",
       deliverables: ["Custom Storefronts", "Mobile-First Design", "Subtle Micro-Interactions", "SEO & OpenGraph"],
       href: "/services#websites",
     },

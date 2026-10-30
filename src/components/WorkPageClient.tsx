@@ -75,7 +75,7 @@ export default function WorkPageClient({ projects, isSampleData }: WorkPageClien
       <section className="py-8 sm:py-20 px-4 min-[361px]:px-5 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-1">
         
         {/* Sticky 44px Horizontal Filter Bar with Fade Edge Hint */}
-        <div className="sticky top-[52px] sm:top-[64px] z-30 bg-brand-cream/95 backdrop-blur-md pt-3 pb-3 -mt-3 mb-8 sm:mb-12 border-b border-brand-border/60">
+        <div className="sticky top-[calc(env(safe-area-inset-top,0px)+60px)] sm:top-[calc(env(safe-area-inset-top,0px)+61px)] z-30 bg-brand-cream/95 backdrop-blur-md pt-3 pb-3 -mt-3 mb-8 sm:mb-12 border-b border-brand-border/60">
           <div className="relative">
             <div className="flex items-center gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory -mx-4 px-4 min-[361px]:-mx-5 min-[361px]:px-5 sm:mx-0 sm:px-0">
               {visibleCategories.map((cat) => {

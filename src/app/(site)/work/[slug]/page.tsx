@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ArrowLeft, ArrowRight, MessageCircle, CheckCircle2 } from "lucide-react";
 import { getProjects } from "@/sanity/projects";
-import { siteConfig, getWhatsAppUrl } from "@/content/site";
+import { getWhatsAppUrl } from "@/content/site";
+import { getPageMetadata } from "@/lib/metadata";
 import ProjectMediaCanvas from "@/components/ProjectMediaCanvas";
 import ProjectGallery from "@/components/ProjectGallery";
 import FadeUp from "@/components/motion/FadeUp";
@@ -37,15 +38,12 @@ export async function generateMetadata({
     };
   }
 
-  return {
+  return getPageMetadata({
+    path: `/work/${project.slug}`,
     title: project.title,
     description: project.overview,
-    openGraph: {
-      title: `${project.title} | ${siteConfig.name}`,
-      description: project.overview,
-      images: project.media[0] ? [project.media[0].url] : undefined,
-    },
-  };
+    image: project.media[0]?.url,
+  });
 }
 
 export default async function ProjectDetailPage({ params }: ProjectPageProps) {
