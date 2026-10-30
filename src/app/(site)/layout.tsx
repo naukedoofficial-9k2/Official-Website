@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import CustomCursor from "@/components/motion/CustomCursor";
 import PageTransition from "@/components/motion/PageTransition";
 import IntroAnimation from "@/components/motion/IntroAnimation";
-import { IntroProvider } from "@/context/IntroContext";
+import { HeroProvider } from "@/context/HeroContext";
 import { siteConfig } from "@/content/site";
 
 export const viewport: Viewport = {
@@ -19,7 +19,7 @@ export const viewport: Viewport = {
 
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700", "900"],
   variable: "--font-poppins",
   display: "swap",
 });
@@ -71,14 +71,22 @@ export default function RootLayout({
         className="font-sans bg-brand-cream text-brand-ink antialiased min-h-screen flex flex-col selection:bg-brand-red selection:text-white"
         suppressHydrationWarning
       >
-        <IntroProvider>
+        {/* Scroll and reveal effects start hidden, so show everything if scripts never run */}
+        <noscript>
+          <style
+            dangerouslySetInnerHTML={{
+              __html: ".js-reveal{opacity:1!important;transform:none!important;clip-path:none!important}",
+            }}
+          />
+        </noscript>
+        <HeroProvider>
           <IntroAnimation />
           <PageTransition />
           <CustomCursor />
           <Navbar />
           <main className="flex-1">{children}</main>
           <Footer />
-        </IntroProvider>
+        </HeroProvider>
         <Analytics />
       </body>
     </html>

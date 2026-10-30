@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { Project } from "@/content/projects";
+import ProjectImage from "@/components/ProjectImage";
 
 interface ProjectCardProps {
   project: Project;
@@ -100,10 +100,10 @@ export default function ProjectCard({
           }`}
         >
           <motion.div
-            initial={shouldReduceMotion ? undefined : { clipPath: "inset(0 0 100% 0)" }}
-            animate={isMediaInView ? { clipPath: "inset(0 0 0% 0)" } : undefined}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="w-full h-full relative"
+            initial={shouldReduceMotion ? undefined : { clipPath: "inset(0 0 100% 0)", scale: 1.18 }}
+            animate={isMediaInView ? { clipPath: "inset(0 0 0% 0)", scale: 1 } : undefined}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="js-reveal card-reveal w-full h-full relative"
           >
             {isVideo && primaryMedia?.url ? (
               <video
@@ -118,11 +118,10 @@ export default function ProjectCard({
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
             ) : hasRealAsset && primaryMedia?.url ? (
-              <Image
+              <ProjectImage
                 src={primaryMedia.url}
                 alt={project.title}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                sizes={isLarge ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
                 priority={priority}
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
@@ -163,6 +162,12 @@ export default function ProjectCard({
               </span>
             </div>
           )}
+
+          {/* Red bar slides up on hover or keyboard focus */}
+          <div className="hidden md:flex absolute inset-x-0 bottom-0 z-10 items-center justify-between gap-3 bg-brand-red text-white px-5 py-3.5 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-focus-visible:translate-y-0">
+            <span className="text-sm font-black">View project</span>
+            <ArrowUpRight className="w-5 h-5" />
+          </div>
         </div>
 
         {/* Card Content: Title shown ONCE here, flex-1 ensures equal card heights */}

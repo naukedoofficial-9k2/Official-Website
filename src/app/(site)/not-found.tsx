@@ -15,7 +15,7 @@ export default function NotFound() {
         />
       </div>
 
-      <span className="font-mono text-xs uppercase tracking-widest text-brand-red font-bold px-3 py-1 rounded-full bg-brand-red/10 border border-brand-red/20 mb-4">
+      <span className="text-xs uppercase tracking-widest text-brand-red font-bold px-3 py-1 rounded-full bg-brand-red/10 border border-brand-red/20 mb-4">
         404 / Lost in the feed
       </span>
 

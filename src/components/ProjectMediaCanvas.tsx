@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
-import Image from "next/image";
 import { Project } from "@/content/projects";
+import ProjectImage from "@/components/ProjectImage";
 
 interface ProjectMediaCanvasProps {
   media?: Project["media"];
@@ -88,24 +88,23 @@ export default function ProjectMediaCanvas({
             />
             {/* Subtle tap indication badge */}
             <div className="absolute bottom-3 right-3 z-10 pointer-events-none">
-              <span className="text-[11px] font-mono font-bold px-2.5 py-1 rounded-full bg-black/60 text-white backdrop-blur-sm">
+              <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-black/60 text-white backdrop-blur-sm">
                 {isPlaying ? "Tap to pause" : "Tap to play"}
               </span>
             </div>
           </div>
         ) : hasRealAsset && primaryMedia?.url ? (
-          <Image
+          <ProjectImage
             src={primaryMedia.url}
             alt={title}
-            fill
             priority
-            sizes="(max-width: 768px) 100vw, 1200px"
+            sizes="(max-width: 1280px) 100vw, 1280px"
             className="object-cover"
           />
         ) : (
           /* Clean Sample Layout Canvas */
           <div className="w-full h-full flex flex-col items-center justify-center p-6 sm:p-14 bg-gradient-to-br from-[#FAF5EE] via-[#F4ECE1] to-[#EDE3D6] text-center relative overflow-hidden">
-            <span className="text-xs font-mono font-black uppercase tracking-widest text-brand-red bg-white px-3.5 py-1 rounded-full border border-brand-border mb-3 shadow-sm">
+            <span className="text-xs font-black uppercase tracking-widest text-brand-red bg-white px-3.5 py-1 rounded-full border border-brand-border mb-3 shadow-sm">
               {category} Showcase
             </span>
 

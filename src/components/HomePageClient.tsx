@@ -1,20 +1,18 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
-import Image from "next/image";
+import React from "react";
 import Link from "next/link";
-import { MessageCircle, ArrowRight, ArrowUpRight } from "lucide-react";
-import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import { siteConfig, getWhatsAppUrl } from "@/content/site";
+import { ArrowRight } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 import { Project } from "@/content/projects";
-import Marquee from "@/components/Marquee";
-import HeroStickers from "@/components/HeroStickers";
+import HeroVolume from "@/components/HeroVolume";
+import ScrollStatement from "@/components/ScrollStatement";
+import ScrollBand from "@/components/ScrollBand";
+import ServiceRows from "@/components/ServiceRows";
+import HomeSteps from "@/components/HomeSteps";
+import BriefBuilder from "@/components/BriefBuilder";
 import ProjectCard from "@/components/ProjectCard";
-import ProcessCards from "@/components/ProcessCards";
-import MagneticButton from "@/components/motion/MagneticButton";
 import RevealText from "@/components/motion/RevealText";
-import FadeUp from "@/components/motion/FadeUp";
-import { useIntro } from "@/context/IntroContext";
 
 interface HomePageClientProps {
   featuredProjects: Project[];
@@ -22,421 +20,86 @@ interface HomePageClientProps {
 }
 
 export default function HomePageClient({ featuredProjects, isSampleData }: HomePageClientProps) {
-  const heroRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
-  const { isIntroComplete } = useIntro();
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-
-  // Hero parallax: Subtle small translation on desktop only, off on mobile
-  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "8%"]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.4]);
-
-  const whatsappHref = getWhatsAppUrl("Hi Nau K Do! I want to talk about our brand and content.");
-  const headlineWords = siteConfig.tagline.split(" ");
-
-  const services = [
-    {
-      title: "Social Media Management",
-      badge: "REELS & POSTING",
-      description: "Feed strategy, viral-format reels, story engagement, and daily posting that keeps people checking in.",
-      deliverables: ["Content Calendar", "Monthly Reels & Carousels", "Story Sequences", "Community Engagement"],
-      href: "/services#social-media",
-    },
-    {
-      title: "Content Creation & Shoots",
-      badge: "STUDIO & LOCATION",
-      description: "Real-camera studio lighting, macro product closeups, and handheld lifestyle shoots. No bland stock imagery.",
-      deliverables: ["Studio Lighting", "Lifestyle Shoots", "UGC Creator Content", "Color-Graded Footage"],
-      href: "/services#shoots",
-    },
-    {
-      title: "Website Design & Development",
-      badge: "FAST WEBSITES",
-      description: "Fast, good-looking digital storefronts and landing pages that match your content.",
-      deliverables: ["Custom Storefronts", "Mobile-First Design", "Subtle Micro-Interactions", "SEO & OpenGraph"],
-      href: "/services#websites",
-    },
-    {
-      title: "Logo & Brand Identity",
-      badge: "DISTINCTIVE MARKS",
-      description: "Bold multilingual wordmarks, typography rules, color pairings, and sticker systems built for digital screens.",
-      deliverables: ["Wordmark & Monogram", "Color & Typography Tokens", "Social Sticker Kits", "Brand Guidelines"],
-      href: "/services#branding",
-    },
-    {
-      title: "Video Editing & Motion Graphics",
-      badge: "HIGH RETENTION",
-      description: "Fast-paced kinetic typography, sound-designed beat cuts, and 3D product motion engineered to grab attention.",
-      deliverables: ["Kinetic Typography", "Sound Design & SFX", "Multi-Ratio Cuts", "Drop Bumper Animations"],
-      href: "/services#motion",
-    },
-  ];
 
   return (
     <div className="flex flex-col min-h-screen">
-      
-      {/* 01 / HERO SECTION (FULL-BLEED SIGNATURE RED) */}
-      <section
-        ref={heroRef}
-        className="relative bg-brand-red text-white pt-6 min-[360px]:pt-8 sm:pt-14 pb-14 sm:pb-28 px-4 min-[361px]:px-5 sm:px-6 lg:px-8 overflow-hidden"
-      >
-        <motion.div
-          style={!isMobile && !shouldReduceMotion ? { y: heroY, opacity: heroOpacity } : undefined}
-          className="max-w-7xl mx-auto w-full relative z-10"
-        >
-          {/* Top Pill Accent */}
-          <div className="flex items-center gap-2 mb-4 sm:mb-8">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-xs font-black text-white shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-              <span>Social-First Creative Agency</span>
-              <span className="opacity-60">•</span>
-              <span className="hidden min-[360px]:inline">India &amp; Western Markets</span>
-              <span className="min-[360px]:hidden">Global</span>
-            </span>
-          </div>
 
-          {/* Huge Tagline (Stacked in 2-3 lines, fits in first screen on 375x667) */}
-          <div className="max-w-5xl mb-4 sm:mb-8">
-            <h1 className="hero-fluid-title font-black text-white tracking-tight">
-              {headlineWords.map((word, idx) => (
-                <span key={idx} className="inline-block overflow-hidden mr-[0.2em] last:mr-0 pb-1 -mb-1">
-                  <motion.span
-                    initial={shouldReduceMotion ? undefined : { y: "110%", opacity: 0 }}
-                    animate={
-                      shouldReduceMotion
-                        ? undefined
-                        : isIntroComplete
-                        ? { y: 0, opacity: 1 }
-                        : { y: "110%", opacity: 0 }
-                    }
-                    transition={{
-                      type: "spring",
-                      damping: 20,
-                      stiffness: 100,
-                      delay: 0.05 + idx * 0.1,
-                    }}
-                    className="inline-block"
-                  >
-                    {word}
-                  </motion.span>
-                </span>
-              ))}
-            </h1>
-          </div>
+      {/* 01 / HERO: THE VOLUME SLIDER FLOODS THE PAGE RED */}
+      <HeroVolume />
 
-          {/* Supporting line (Max 2 to 3 lines, comfortable line-height) */}
-          <motion.p
-            initial={shouldReduceMotion ? undefined : { opacity: 0, y: 16 }}
-            animate={
-              shouldReduceMotion
-                ? undefined
-                : isIntroComplete
-                ? { opacity: 1, y: 0 }
-                : { opacity: 0, y: 16 }
-            }
-            transition={{ duration: 0.5, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="text-sm min-[360px]:text-base sm:text-2xl text-white/90 max-w-2xl font-medium leading-relaxed mb-6 sm:mb-10"
-          >
-            We create, shoot, edit and post content that makes brands feel alive online — and we build the fast websites that go with it.
-          </motion.p>
+      {/* 02 / PINNED STATEMENT THAT FILLS IN WORD BY WORD */}
+      <ScrollStatement />
 
-          {/* Primary Action Buttons (Stacked full-width on mobile, 52px tall each) */}
-          <motion.div
-            initial={shouldReduceMotion ? undefined : { opacity: 0, y: 16 }}
-            animate={
-              shouldReduceMotion
-                ? undefined
-                : isIntroComplete
-                ? { opacity: 1, y: 0 }
-                : { opacity: 0, y: 16 }
-            }
-            transition={{ duration: 0.5, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 mb-10 sm:mb-14 w-full"
-          >
-            <MagneticButton className="w-full sm:w-auto">
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="h-[52px] w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-white text-brand-red hover:bg-brand-cream text-base font-black px-8 rounded-full shadow-lg tap-bounce active:scale-[0.98] transition-all"
-              >
-                <MessageCircle className="w-5 h-5 fill-brand-red" />
-                <span>Chat on WhatsApp</span>
-              </a>
-            </MagneticButton>
+      {/* 03 / SCROLL-LINKED TYPE BAND (INK) */}
+      <ScrollBand />
 
-            <MagneticButton className="w-full sm:w-auto">
-              <Link
-                href="/work"
-                className="h-[52px] w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-transparent hover:bg-white/10 text-white text-base font-bold px-7 rounded-full border-2 border-white/40 tap-bounce active:scale-[0.98] transition-all"
-              >
-                <span>See our work</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </MagneticButton>
-          </motion.div>
-
-          {/* Floating / Swipeable Sticker Tiles */}
-          <div className="pt-2 sm:pt-4 border-t border-white/15">
-            <HeroStickers linkToProjects={isSampleData} />
-          </div>
-        </motion.div>
-
-        {/* Subtle decorative background ring */}
-        <div className="absolute right-0 top-0 translate-x-1/3 -translate-y-1/3 w-[600px] h-[600px] rounded-full border border-white/10 pointer-events-none" />
-      </section>
-
-      {/* 02 / VELOCITY MARQUEE (INK BAND) */}
-      <Marquee className="bg-brand-ink text-brand-cream py-5 border-y border-brand-border-dark" />
-
-      {/* 03 / FEATURED WORK (SINGLE COLUMN ON MOBILE, BENTO ON DESKTOP) */}
-      <section className="py-16 sm:py-28 px-4 min-[361px]:px-5 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-6 mb-10 sm:mb-14">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-2 h-2 rounded-full bg-brand-red" />
-              <span className="text-xs font-mono font-bold uppercase tracking-widest text-brand-warmgrey">
-                Selected Projects
-              </span>
-            </div>
-            <RevealText
-              text="Featured Work"
-              as="h2"
-              className="section-fluid-heading font-black text-brand-ink tracking-tight pb-1"
-            />
-            {isSampleData && (
-              <p className="text-xs sm:text-sm text-brand-warmgrey mt-1 sm:mt-2">
-                Sample layouts. Real projects coming soon.
-              </p>
-            )}
-          </div>
-
-          <Link
-            href="/work"
-            className="hidden sm:inline-flex items-center gap-2 text-sm font-bold text-brand-ink hover:text-brand-red transition-colors group"
-          >
-            <span>Browse all work</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </div>
-
-        {/* Bento Grid: 1 col on mobile, 6 col bento on desktop (2 large + 3 medium) */}
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-6 sm:gap-8">
-          {featuredProjects.slice(0, 5).map((project, idx) => {
-            const isLarge = idx < 2;
-            return (
-              <div
-                key={project.slug}
-                className={isLarge ? "col-span-1 md:col-span-3" : "col-span-1 md:col-span-2"}
-              >
-                <ProjectCard
-                  project={project}
-                  priority={idx === 0}
-                  isLarge={isLarge}
-                />
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Mobile Full-Width "Browse all work" Button */}
-        <div className="mt-8 sm:hidden">
-          <Link
-            href="/work"
-            className="h-[52px] w-full flex items-center justify-center gap-2 bg-white border border-brand-border text-brand-ink font-black text-sm rounded-full shadow-sm tap-bounce active:scale-[0.98]"
-          >
-            <span>Browse all work</span>
-            <ArrowRight className="w-4 h-4 text-brand-red" />
-          </Link>
-        </div>
-      </section>
-
-      {/* 04 / SERVICES OVERVIEW (WHITE / CREAM WITH INK FEATURE TILE) */}
-      <section className="py-16 sm:py-28 px-4 min-[361px]:px-5 sm:px-6 lg:px-8 bg-white border-y border-brand-border w-full">
+      {/* 04 / FEATURED WORK (SINGLE COLUMN ON MOBILE, BENTO ON DESKTOP) */}
+      <section className="bg-brand-ink text-brand-cream py-16 sm:py-28 px-4 min-[361px]:px-5 sm:px-6 lg:px-8 w-full">
         <div className="max-w-7xl mx-auto">
-          <div className="max-w-3xl mb-12 sm:mb-16">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-2 h-2 rounded-full bg-brand-red" />
-              <span className="text-xs font-mono font-bold uppercase tracking-widest text-brand-warmgrey">
-                What We Make
-              </span>
-            </div>
-            <RevealText
-              text="Reels, shoots, sites. All under one roof."
-              as="h2"
-              className="section-fluid-heading font-black text-brand-ink tracking-tight pb-1"
-            />
-            <p className="text-sm sm:text-base text-brand-warmgrey mt-2 sm:mt-3 leading-relaxed">
-              We shoot the content and build the websites that match. One clear visual voice across every screen.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-            {services.map((item, idx) => (
-              <div
-                key={idx}
-                className="bg-brand-cream rounded-[20px] p-6 sm:p-7 border border-brand-border flex flex-col justify-between transition-all duration-200 hover:shadow-card hover:border-brand-red/30"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-black uppercase px-2.5 py-1 rounded-full bg-brand-red text-white">
-                      {item.badge}
-                    </span>
-                    <span className="text-xs font-mono text-brand-warmgrey font-semibold">
-                      0{idx + 1}
-                    </span>
-                  </div>
-
-                  <h3 className="text-lg sm:text-xl font-bold text-brand-ink mb-2">
-                    {item.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-brand-warmgrey leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-
-                <div className="mt-5 sm:mt-6 pt-4 border-t border-brand-border/60">
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {item.deliverables.map((del, dIdx) => (
-                      <span
-                        key={dIdx}
-                        className="text-xs font-semibold bg-white text-brand-ink px-2.5 py-1 rounded-full border border-brand-border"
-                      >
-                        {del}
-                      </span>
-                    ))}
-                  </div>
-
-                  <Link
-                    href={item.href}
-                    className="h-11 inline-flex items-center gap-1.5 text-xs font-bold text-brand-red hover:underline tap-bounce active:scale-95"
-                  >
-                    <span>See details</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </div>
-            ))}
-
-            {/* Feature Ink Retainer Tile */}
-            <div className="bg-brand-ink text-brand-cream rounded-[20px] p-6 sm:p-7 border border-white/10 flex flex-col justify-between">
-              <div>
-                <span className="text-xs font-black uppercase px-2.5 py-1 rounded-full bg-white/20 text-white">
-                  FULL SCOPE
-                </span>
-                <h3 className="text-lg sm:text-xl font-bold text-white mt-4 mb-2">
-                  Monthly Creative Retainer
-                </h3>
-                <p className="text-xs sm:text-sm text-brand-cream/80 leading-relaxed">
-                  A dedicated creative partnership: regular shoots, scheduled reels, and ongoing website updates.
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-6 mb-10 sm:mb-16">
+            <div>
+              <RevealText text="The work." as="h2" className="work-title font-black text-white" />
+              {isSampleData && (
+                <p className="text-sm text-brand-cream/70 mt-3">
+                  Sample layouts. Real projects coming soon.
                 </p>
-              </div>
-
-              <div className="mt-5 sm:mt-6 pt-4 border-t border-white/10">
-                <a
-                  href={getWhatsAppUrl("Hi Nau K Do! I want to talk about a monthly creative retainer for our brand.")}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="h-[52px] w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-brand-red hover:bg-brand-red-hover text-white text-xs sm:text-sm font-black px-6 rounded-full shadow-sticker tap-bounce active:scale-[0.98] transition-all"
-                >
-                  <MessageCircle className="w-4 h-4 fill-white/20" />
-                  <span>Discuss a Retainer</span>
-                </a>
-              </div>
+              )}
             </div>
+
+            <Link
+              href="/work"
+              className="hidden sm:inline-flex items-center gap-2 text-sm font-bold text-white hover:text-brand-cream/70 transition-colors group pb-3 whitespace-nowrap"
+            >
+              <span>Browse all work</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          {/* Bento Grid: 1 col on mobile, 6 col bento on desktop (2 large + 3 medium) */}
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-6 sm:gap-8">
+            {featuredProjects.slice(0, 5).map((project, idx) => {
+              const isLarge = idx < 2;
+              return (
+                <motion.div
+                  key={project.slug}
+                  initial={shouldReduceMotion ? undefined : { opacity: 0, y: 72 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.1 }}
+                  transition={{ duration: 0.7, delay: (idx % 3) * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                  className={`js-reveal ${isLarge ? "col-span-1 md:col-span-3" : "col-span-1 md:col-span-2"}`}
+                >
+                  <ProjectCard
+                    project={project}
+                    priority={idx === 0}
+                    isLarge={isLarge}
+                  />
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Mobile Full-Width "Browse all work" Button */}
+          <div className="mt-8 sm:hidden">
+            <Link
+              href="/work"
+              className="h-[52px] w-full flex items-center justify-center gap-2 bg-white text-brand-ink font-black text-sm rounded-full shadow-sm tap-bounce active:scale-[0.98]"
+            >
+              <span>Browse all work</span>
+              <ArrowRight className="w-4 h-4 text-brand-red" />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* 05 / PROCESS SECTION WITH CONNECTING LINE */}
-      <section className="py-16 sm:py-28 px-4 min-[361px]:px-5 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-        <div className="max-w-2xl mb-10 sm:mb-12">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-2 h-2 rounded-full bg-brand-red" />
-            <span className="text-xs font-mono font-bold uppercase tracking-widest text-brand-warmgrey">
-              The Blueprint
-            </span>
-          </div>
-          <RevealText
-            text="Simple steps, clear next moves."
-            as="h2"
-            className="section-fluid-heading font-black text-brand-ink tracking-tight pb-1"
-          />
-          <p className="text-xs sm:text-base text-brand-warmgrey mt-2 sm:mt-3">
-            From first conversation to active posting, here is how we work together.
-          </p>
-        </div>
+      {/* 05 / SERVICES AS HUGE SCROLL-DRIVEN ROWS */}
+      <ServiceRows />
 
-        <ProcessCards />
-      </section>
+      {/* 06 / THREE STACKING STEPS */}
+      <HomeSteps />
 
-      {/* 06 / CLOSING CTA PANEL (INK - WITH SMOOTH SCROLL REVEAL OF PANEL & LOGO) */}
-      <section className="px-4 min-[361px]:px-5 sm:px-6 lg:px-8 pb-16 sm:pb-28 max-w-7xl mx-auto w-full">
-        <motion.div
-          initial={shouldReduceMotion ? undefined : { opacity: 0, y: 32, scale: 0.98 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, amount: 0.1 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="bg-brand-ink text-brand-cream rounded-[20px] p-6 min-[360px]:p-8 sm:p-14 lg:p-16 relative overflow-hidden border border-brand-border-dark shadow-2xl"
-        >
-          <div className="max-w-3xl relative z-10 space-y-5 sm:space-y-6">
-            
-            {/* White Logo (Clearly visible) */}
-            <div className="relative h-9 w-[110px] min-[360px]:h-10 min-[360px]:w-[124px] sm:h-12 sm:w-[144px]">
-              <Image
-                src="/brand/logo-white.svg"
-                alt="Nau K Do"
-                fill
-                className="object-contain object-left"
-              />
-            </div>
-
-            <h2 className="text-3xl min-[360px]:text-4xl sm:text-6xl font-black text-white tracking-tight leading-[1.08] max-w-2xl">
-              Ready to make your brand loud?
-            </h2>
-
-            <p className="text-sm min-[360px]:text-base sm:text-lg text-brand-cream/80 font-medium leading-relaxed max-w-2xl">
-              Tell us about your brand. We will take it from here. Say hi on WhatsApp to discuss your next shoot, reel drop, or website launch.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-3 w-full">
-              <MagneticButton className="w-full sm:w-auto">
-                <a
-                  href={whatsappHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="h-[52px] w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-brand-red hover:bg-brand-red-hover text-white text-base font-black px-8 rounded-full shadow-sticker tap-bounce active:scale-[0.98] transition-all"
-                >
-                  <MessageCircle className="w-5 h-5 fill-white/20" />
-                  <span>Chat on WhatsApp</span>
-                </a>
-              </MagneticButton>
-
-              <MagneticButton className="w-full sm:w-auto">
-                <Link
-                  href="/services"
-                  className="h-[52px] w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-transparent text-white hover:bg-white/10 text-base font-bold px-7 rounded-full border border-white/25 tap-bounce active:scale-[0.98] transition-colors"
-                >
-                  <span>Explore services</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </MagneticButton>
-            </div>
-          </div>
-        </motion.div>
-      </section>
+      {/* 07 / BRIEF BUILDER: WRITES THE WHATSAPP MESSAGE */}
+      <BriefBuilder />
 
     </div>
   );

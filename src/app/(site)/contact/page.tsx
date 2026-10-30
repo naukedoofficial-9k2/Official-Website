@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
-import { MessageCircle, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import { motion } from "framer-motion";
-import { siteConfig, getWhatsAppUrl } from "@/content/site";
+import { siteConfig } from "@/content/site";
+import BriefBuilder from "@/components/BriefBuilder";
 import RevealText from "@/components/motion/RevealText";
 import FadeUp from "@/components/motion/FadeUp";
 
@@ -29,10 +30,6 @@ const nextSteps = [
 ];
 
 export default function ContactPage() {
-  const whatsappHref = getWhatsAppUrl(
-    "Hi Nau K Do! I would love to talk about our brand and upcoming projects."
-  );
-
   return (
     <div className="flex flex-col min-h-screen">
       
@@ -41,7 +38,7 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-2 mb-3">
             <span className="w-2 h-2 rounded-full bg-brand-red animate-pulse" />
-            <span className="text-xs font-mono font-bold uppercase tracking-widest text-brand-cream/60">
+            <span className="text-xs font-bold uppercase tracking-widest text-brand-cream/60">
               Get In Touch
             </span>
           </div>
@@ -60,58 +57,16 @@ export default function ContactPage() {
         </div>
       </section>
 
+      <BriefBuilder />
+
       {/* Main Content */}
       <div className="py-12 sm:py-20 px-4 sm:px-5 md:px-8 max-w-7xl mx-auto w-full flex-1">
         
-        {/* Main WhatsApp Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 220, damping: 22, delay: 0.1 }}
-          className="rounded-[20px] bg-white border border-brand-border p-6 sm:p-10 lg:p-12 mb-14 sm:mb-20 shadow-card overflow-hidden"
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            
-            <div className="lg:col-span-7 space-y-4">
-              <span className="text-xs font-mono font-black uppercase tracking-wider text-brand-red block">
-                Primary Channel
-              </span>
-
-              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-brand-ink tracking-tight">
-                Start a direct conversation
-              </h2>
-
-              <p className="text-sm sm:text-base lg:text-lg text-brand-warmgrey leading-relaxed">
-                Click below to launch WhatsApp with a prefilled message. Whether you have a locked brief or just a raw idea for your brand, we are here to talk.
-              </p>
-            </div>
-
-            <div className="lg:col-span-5 flex flex-col items-stretch gap-4 p-5 sm:p-8 rounded-[20px] bg-brand-cream border border-brand-border">
-              <span className="text-xs font-mono font-bold text-brand-warmgrey">
-                Direct Line
-              </span>
-              <div className="text-xl sm:text-2xl lg:text-3xl font-black text-brand-ink tracking-tight">
-                {siteConfig.whatsappDisplay}
-              </div>
-
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center gap-2.5 bg-brand-red hover:bg-brand-red-hover text-white text-base font-black h-[52px] px-6 rounded-full shadow-sticker tap-bounce transition-transform duration-200 active:scale-95 text-center"
-              >
-                <MessageCircle className="w-5 h-5 fill-white/20" />
-                <span>Chat on WhatsApp</span>
-              </a>
-            </div>
-
-          </div>
-        </motion.div>
 
         {/* What Happens Next: 3 Simple Steps Stacked on Mobile */}
         <div className="mb-14 sm:mb-20">
           <div className="max-w-2xl mb-8 sm:mb-12">
-            <span className="text-xs font-mono font-black uppercase tracking-wider text-brand-red block mb-1">
+            <span className="text-xs font-black uppercase tracking-wider text-brand-red block mb-1">
               The Flow
             </span>
             <RevealText
@@ -132,7 +87,7 @@ export default function ContactPage() {
                 className="bg-white rounded-[20px] p-6 sm:p-8 border border-brand-border flex flex-col justify-between shadow-sm hover:shadow-card hover:border-brand-red/30 transition-all"
               >
                 <div>
-                  <span className="text-xs font-mono font-black text-brand-red px-3 py-1 rounded-full bg-brand-cream border border-brand-border inline-block mb-4">
+                  <span className="text-xs font-black text-brand-red px-3 py-1 rounded-full bg-brand-cream border border-brand-border inline-block mb-4">
                     Step {step.step}
                   </span>
 

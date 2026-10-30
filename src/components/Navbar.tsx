@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { MessageCircle, Menu, X, ArrowUpRight, Instagram } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { siteConfig, getWhatsAppUrl } from "@/content/site";
+import { useHero } from "@/context/HeroContext";
 import MagneticButton from "@/components/motion/MagneticButton";
 
 export default function Navbar() {
@@ -17,9 +18,11 @@ export default function Navbar() {
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
+  const { isHeroLoud } = useHero();
+
   const isHome = pathname === "/";
-  // On home at top, header blends with full-bleed red hero
-  const isRedHeader = isHome && !scrolled;
+  // On home at top, header blends with full-bleed red hero until the volume drops
+  const isRedHeader = isHome && !scrolled && isHeroLoud;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -93,10 +96,10 @@ export default function Navbar() {
         className={`sticky top-0 z-40 w-full transition-all duration-300 pt-safe ${
           isRedHeader
             ? scrolled
-              ? "bg-brand-red/98 backdrop-blur-md text-white border-b border-white/20 shadow-md"
+              ? "bg-brand-red/95 backdrop-blur-md text-white border-b border-white/20 shadow-md"
               : "bg-brand-red text-white border-b border-white/10"
             : scrolled
-            ? "bg-brand-cream/98 backdrop-blur-md text-brand-ink border-b border-brand-border shadow-md"
+            ? "bg-brand-cream/95 backdrop-blur-md text-brand-ink border-b border-brand-border shadow-md"
             : "bg-brand-cream/95 backdrop-blur-md text-brand-ink border-b border-brand-border/80 shadow-sm"
         }`}
       >
@@ -110,7 +113,7 @@ export default function Navbar() {
           {/* Brand Logo - 28 to 32px on mobile, shrinks slightly on scroll */}
           <Link
             href="/"
-            className="flex items-center group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red rounded-lg"
+            className="min-h-[44px] flex items-center group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red rounded-lg"
             aria-label="Nau K Do Home"
           >
             <div
@@ -144,7 +147,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`relative isolate px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${
+                  className={`relative isolate px-4 py-1.5 [@media(pointer:coarse)]:py-3 rounded-full text-sm font-bold transition-colors ${
                     active
                       ? isRedHeader
                         ? "text-brand-red"

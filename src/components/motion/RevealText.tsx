@@ -58,11 +58,11 @@ export default function RevealText({
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
-        className="inline-block"
+        className="js-reveal inline-block"
       >
         {words.map((word, index) => (
           <span key={index} className="inline-block overflow-hidden mr-[0.25em] last:mr-0 pb-2 -mb-2">
-            <motion.span variants={child} className="inline-block pb-0.5">
+            <motion.span variants={child} className="js-reveal inline-block pb-0.5">
               {word}
             </motion.span>
           </span>

@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+
+const SWEEP = { duration: 0.58, ease: [0.76, 0, 0.24, 1] as const };
 
 export default function PageTransition() {
   const pathname = usePathname();
-  const [isPresent, setIsPresent] = useState(false);
-  const isFirstMount = React.useRef(true);
+  const [sweepKey, setSweepKey] = useState<string | null>(null);
+  const isFirstMount = useRef(true);
   const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -17,44 +19,29 @@ export default function PageTransition() {
       return;
     }
 
-    setIsPresent(true);
-    const timer = setTimeout(() => {
-      setIsPresent(false);
-    }, 450);
-
-    return () => clearTimeout(timer);
+    setSweepKey(pathname);
   }, [pathname]);
 
-  if (shouldReduceMotion) return null;
+  if (shouldReduceMotion || !sweepKey) return null;
 
   return (
-    <AnimatePresence mode="wait">
-      {isPresent && (
-        <motion.div
-          key={`transition-${pathname}`}
-          initial={{ y: 0 }}
-          animate={{ y: 0 }}
-          exit={{ y: "-100%" }}
-          transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
-          className="fixed inset-0 z-[99999] bg-brand-red flex items-center justify-center pointer-events-none"
-        >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 1.05, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="relative h-12 w-36"
-          >
-            <Image
-              src="/brand/logo-white.svg"
-              alt="Nau K Do"
-              fill
-              priority
-              className="object-contain"
-            />
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <div key={sweepKey} className="fixed inset-0 z-[99999] overflow-hidden pointer-events-none">
+      <motion.div
+        initial={{ y: "100%" }}
+        animate={{ y: "-100%" }}
+        transition={SWEEP}
+        className="absolute inset-0 bg-brand-ink"
+      />
+      <motion.div
+        initial={{ y: "100%" }}
+        animate={{ y: "-100%" }}
+        transition={{ ...SWEEP, delay: 0.07 }}
+        className="absolute inset-0 bg-brand-red flex items-center justify-center"
+      >
+        <div className="relative h-16 w-48 sm:h-20 sm:w-56">
+          <Image src="/brand/logo-white.svg" alt="" fill priority className="object-contain" />
+        </div>
+      </motion.div>
+    </div>
   );
 }

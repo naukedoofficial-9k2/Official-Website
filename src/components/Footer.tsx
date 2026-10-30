@@ -1,28 +1,18 @@
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { MessageCircle, Instagram, Mail } from "lucide-react";
 import { siteConfig, getWhatsAppUrl } from "@/content/site";
+import FooterLogo from "@/components/FooterLogo";
 
 export default function Footer() {
   const whatsappHref = getWhatsAppUrl("Hi Nau K Do! I would love to talk about our brand and content.");
 
   return (
-    <footer className="w-full bg-brand-ink text-brand-cream py-12 sm:py-20 px-4 min-[361px]:px-5 sm:px-6 lg:px-8 border-t border-brand-border-dark">
+    <footer className="w-full bg-brand-ink text-brand-cream pt-12 sm:pt-20 pb-[calc(env(safe-area-inset-bottom,0px)+1.5rem)] sm:pb-10 px-4 min-[361px]:px-5 sm:px-6 lg:px-8 border-t border-brand-border-dark">
       <div className="max-w-7xl mx-auto flex flex-col gap-10 sm:gap-14">
         
         {/* Top Brand Identity Block */}
         <div className="space-y-4 max-w-xl pb-8 sm:pb-12 border-b border-white/10">
-          <Link href="/" className="inline-block group focus:outline-none" aria-label="Nau K Do Home">
-            <div className="relative h-9 w-[112px] min-[360px]:h-10 min-[360px]:w-[124px] sm:h-11 sm:w-[130px] transition-transform duration-200 group-hover:scale-[1.03]">
-              <Image
-                src="/brand/logo-white.svg"
-                alt="Nau K Do"
-                fill
-                className="object-contain"
-              />
-            </div>
-          </Link>
           <p className="text-xl sm:text-2xl font-black text-white tracking-tight">
             {siteConfig.tagline}
           </p>
@@ -149,11 +139,13 @@ export default function Footer() {
           <p>© {new Date().getFullYear()} Nau K Do. All rights reserved.</p>
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-brand-cream/80 font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-red animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-red" />
               {siteConfig.tagline}
             </span>
           </div>
         </div>
+
+        <FooterLogo />
 
       </div>
     </footer>

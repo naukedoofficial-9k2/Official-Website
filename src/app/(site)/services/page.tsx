@@ -1,19 +1,20 @@
 "use client";
 
 import React from "react";
-import type { Metadata } from "next";
-import { MessageCircle, CheckCircle2 } from "lucide-react";
+import { ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { getWhatsAppUrl } from "@/content/site";
+import BriefBuilder from "@/components/BriefBuilder";
 import ProcessCards from "@/components/ProcessCards";
+import KineticText from "@/components/motion/KineticText";
 import RevealText from "@/components/motion/RevealText";
 import FadeUp from "@/components/motion/FadeUp";
-import MagneticButton from "@/components/motion/MagneticButton";
 
 const serviceBands = [
   {
     id: "social-media",
     number: "01",
+    name: "Social",
     title: "Social Media Management & Posting",
     promise: "Make people smile before they scroll on.",
     theme: "cream" as const, // cream background
@@ -31,6 +32,7 @@ const serviceBands = [
   {
     id: "shoots",
     number: "02",
+    name: "Shoots",
     title: "Content Creation & Real Shoots",
     promise: "Real cameras, macro textures, zero bland stock.",
     theme: "white" as const, // white background
@@ -48,6 +50,7 @@ const serviceBands = [
   {
     id: "websites",
     number: "03",
+    name: "Websites",
     title: "Website Design & Development",
     promise: "Fast, good-looking websites that feel effortless.",
     theme: "ink" as const, // ink background
@@ -65,6 +68,7 @@ const serviceBands = [
   {
     id: "branding",
     number: "04",
+    name: "Branding",
     title: "Logo & Brand Identity",
     promise: "Bold marks that punch through a small screen.",
     theme: "cream" as const, // cream background
@@ -82,6 +86,7 @@ const serviceBands = [
   {
     id: "motion",
     number: "05",
+    name: "Motion",
     title: "Video Editing & Motion Graphics",
     promise: "Rhythmic beat-matching and punchy hooks.",
     theme: "white" as const, // white background
@@ -99,31 +104,33 @@ const serviceBands = [
 ];
 
 export default function ServicesPage() {
-  const whatsappHref = getWhatsAppUrl("Hi Nau K Do! I want to talk about your services and get a scope for our brand.");
-
   return (
     <div className="flex flex-col min-h-screen">
-      
-      {/* Bold Header Band */}
-      <section className="bg-brand-red text-white pt-10 sm:pt-20 pb-12 sm:pb-24 px-4 min-[361px]:px-5 sm:px-6 lg:px-8 border-b border-white/10">
+
+      {/* Giant Red Header */}
+      <section className="bg-brand-red text-white pt-10 sm:pt-16 pb-10 sm:pb-16 px-4 min-[361px]:px-5 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto w-full">
-          <div className="flex items-center gap-2 mb-2 sm:mb-3">
-            <span className="w-2 h-2 rounded-full bg-white" />
-            <span className="text-xs font-mono font-bold uppercase tracking-widest text-white/80">
-              Agency Capabilities
-            </span>
-          </div>
+          <KineticText text="Reels. Shoots. Sites." className="step-title font-black text-white" />
 
-          <RevealText
-            text="Services"
-            as="h1"
-            className="section-fluid-heading sm:text-7xl lg:text-8xl font-black text-white tracking-tight"
-          />
-
-          <FadeUp delay={0.2}>
-            <p className="mt-3 sm:mt-4 text-sm min-[360px]:text-base sm:text-2xl text-white/90 max-w-2xl leading-relaxed font-medium">
-              Reels, shoots, sites. All under one roof. We build the social momentum and craft the digital storefronts to match.
+          <FadeUp delay={0.45}>
+            <p className="mt-4 sm:mt-6 text-lg sm:text-2xl text-white/90 max-w-2xl leading-relaxed font-medium">
+              All under one roof. We build the social momentum and craft the digital storefronts to match.
             </p>
+          </FadeUp>
+
+          {/* Jump Links */}
+          <FadeUp delay={0.55}>
+            <nav aria-label="Services" className="mt-6 sm:mt-8 flex flex-wrap gap-2">
+              {serviceBands.map((service) => (
+                <a
+                  key={service.id}
+                  href={`#${service.id}`}
+                  className="min-h-[44px] inline-flex items-center px-4 rounded-full bg-white/15 hover:bg-white hover:text-brand-red text-sm font-bold text-white transition-colors tap-bounce active:scale-95"
+                >
+                  {service.name}
+                </a>
+              ))}
+            </nav>
           </FadeUp>
         </div>
       </section>
@@ -138,83 +145,69 @@ export default function ServicesPage() {
             <div
               key={service.id}
               id={service.id}
-              className={`py-14 sm:py-28 px-4 min-[361px]:px-5 sm:px-6 lg:px-8 border-b scroll-mt-20 ${
+              className={`py-14 sm:py-24 px-4 min-[361px]:px-5 sm:px-6 lg:px-8 scroll-mt-16 ${
                 isInk
-                  ? "bg-brand-ink text-brand-cream border-brand-border-dark"
+                  ? "bg-brand-ink text-brand-cream"
                   : isWhite
-                  ? "bg-white text-brand-ink border-brand-border"
-                  : "bg-brand-cream text-brand-ink border-brand-border"
+                  ? "bg-white text-brand-ink"
+                  : "bg-brand-cream text-brand-ink"
               }`}
             >
               <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
-                
-                {/* Left Side: Number, Title, Promise */}
-                <div className="lg:col-span-6 space-y-4 sm:space-y-5">
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={`text-xs sm:text-base font-mono font-black px-3.5 py-1 rounded-full ${
-                        isInk
-                          ? "text-white bg-brand-red border border-white/20 shadow-sm"
-                          : "text-brand-red bg-brand-red/10 border border-brand-red/20"
-                      }`}
-                    >
-                      {service.number}
-                    </span>
-                  </div>
 
-                  <h2 className={`text-2xl min-[360px]:text-3xl sm:text-5xl font-black tracking-tight leading-tight ${isInk ? "text-white" : "text-brand-ink"}`}>
-                    {service.title}
-                  </h2>
+                {/* Left Side Stays Pinned While the List Scrolls */}
+                <div className="pin-tall lg:col-span-6 space-y-4">
+                  <span className={`block text-lg sm:text-2xl font-black ${isInk ? "text-brand-cream/70" : "text-brand-warmgrey"}`}>
+                    {service.number}
+                  </span>
 
-                  <p className="text-base sm:text-xl font-bold text-brand-red leading-snug">
+                  <RevealText
+                    text={service.name}
+                    as="h2"
+                    className={`service-band-title font-black ${isInk ? "text-white" : "text-brand-ink"}`}
+                  />
+
+                  <p className={`text-xl sm:text-3xl font-bold leading-snug tracking-tight ${isInk ? "text-white" : "text-brand-red"}`}>
                     {service.promise}
                   </p>
 
-                  <p className={`text-sm sm:text-base leading-relaxed ${isInk ? "text-brand-cream/95" : "text-brand-warmgrey"}`}>
+                  <p className={`text-base sm:text-lg leading-relaxed ${isInk ? "text-brand-cream/85" : "text-brand-warmgrey"}`}>
                     {service.description}
                   </p>
 
-                  <div className="pt-2 sm:pt-4">
-                    <MagneticButton className="w-full sm:w-auto">
-                      <a
-                        href={getWhatsAppUrl(service.whatsappMsg)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="h-[52px] w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-brand-red hover:bg-brand-red-hover text-white text-sm font-black px-7 rounded-full shadow-sticker tap-bounce active:scale-[0.98] transition-all"
-                      >
-                        <MessageCircle className="w-4 h-4 fill-white/20" />
-                        <span>Inquire About {service.title.split(" ")[0]}</span>
-                      </a>
-                    </MagneticButton>
-                  </div>
+                  <a
+                    href={getWhatsAppUrl(service.whatsappMsg)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`group min-h-[44px] inline-flex items-center gap-1.5 text-base font-black underline underline-offset-4 decoration-2 ${
+                      isInk ? "text-white decoration-white/40" : "text-brand-ink decoration-brand-red"
+                    }`}
+                  >
+                    <span>Ask us about {service.name.toLowerCase()}</span>
+                    <ArrowUpRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </a>
                 </div>
 
                 {/* Right Side: Deliverables with Staggered Checkmark Ticks (High contrast, all visible) */}
-                <div
-                  className={`lg:col-span-6 rounded-[16px] sm:rounded-[20px] p-6 sm:p-10 border ${
-                    isInk
-                      ? "bg-[#1E1E1E] border-white/25 shadow-xl"
-                      : "bg-brand-cream border-brand-border shadow-sm"
-                  }`}
-                >
-                  <h3 className={`text-xs font-mono font-black uppercase tracking-wider mb-5 sm:mb-6 ${isInk ? "text-white" : "text-brand-warmgrey"}`}>
-                    What You Get
+                <div className="lg:col-span-6">
+                  <h3 className={`text-base sm:text-lg font-black mb-2 ${isInk ? "text-white" : "text-brand-ink"}`}>
+                    What you get
                   </h3>
 
-                  <ul className="space-y-3.5 sm:space-y-4">
+                  <ul>
                     {service.deliverables.map((item, dIdx) => (
                       <motion.li
                         key={dIdx}
-                        initial={{ opacity: 0, x: -12 }}
-                        whileInView={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, y: 28 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, amount: 0.1 }}
-                        transition={{ delay: 0.1 + dIdx * 0.06, duration: 0.3 }}
-                        className="flex items-start gap-3 sm:gap-3.5 text-sm sm:text-base font-semibold"
+                        transition={{ delay: 0.05 + dIdx * 0.06, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                        className={`js-reveal flex items-start gap-3 py-4 sm:py-5 border-b text-lg sm:text-2xl font-bold tracking-tight leading-snug ${
+                          isInk ? "border-white/15 text-white" : "border-brand-ink/15 text-brand-ink"
+                        }`}
                       >
-                        <CheckCircle2 className="w-5 h-5 text-brand-red flex-shrink-0 mt-0.5" />
-                        <span className={isInk ? "text-white font-semibold" : "text-brand-ink"}>
-                          {item}
-                        </span>
+                        <CheckCircle2 className="w-6 h-6 text-brand-red flex-shrink-0 mt-0.5 sm:mt-1" />
+                        <span>{item}</span>
                       </motion.li>
                     ))}
                   </ul>
@@ -227,55 +220,24 @@ export default function ServicesPage() {
       </section>
 
       {/* Short 5-Step Process (Uses Vertical Timeline on Mobile) */}
-      <section className="py-16 sm:py-28 px-4 min-[361px]:px-5 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-        <div className="max-w-2xl mb-10 sm:mb-12">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-2 h-2 rounded-full bg-brand-red" />
-            <span className="text-xs font-mono font-bold uppercase tracking-widest text-brand-warmgrey">
-              The Process
-            </span>
-          </div>
-          <RevealText
-            text="Five clear milestones."
-            as="h2"
-            className="section-fluid-heading sm:text-5xl font-black text-brand-ink tracking-tight pb-1"
-          />
-          <p className="text-xs sm:text-base text-brand-warmgrey mt-2 sm:mt-3">
-            From initial creative vision to live posts and continuous tuning.
-          </p>
-        </div>
-
-        <ProcessCards />
-      </section>
-
-      {/* Closing Panel (Ink) */}
-      <section className="px-4 min-[361px]:px-5 sm:px-6 lg:px-8 pb-16 sm:pb-28 max-w-7xl mx-auto w-full">
-        <div className="p-6 min-[360px]:p-8 sm:p-14 rounded-[20px] bg-brand-ink text-brand-cream border border-brand-border-dark flex flex-col md:flex-row items-start md:items-center justify-between gap-6 sm:gap-8 shadow-xl">
-          <div className="space-y-3 max-w-xl">
-            <span className="text-xs font-black text-brand-red uppercase tracking-wider">
-              Get Started
-            </span>
-            <h3 className="text-2xl min-[360px]:text-3xl sm:text-5xl font-black text-white tracking-tight">
-              Let&apos;s build something people stop for.
-            </h3>
-            <p className="text-sm text-brand-cream/80 leading-relaxed">
-              Say hi on WhatsApp with what you need. We will talk through your brand and put together a clear scope.
+      <section className="bg-brand-cream py-16 sm:py-28 px-4 min-[361px]:px-5 sm:px-6 lg:px-8 w-full">
+        <div className="max-w-7xl mx-auto w-full">
+          <div className="max-w-3xl mb-10 sm:mb-14">
+            <RevealText
+              text="Five clear milestones."
+              as="h2"
+              className="service-band-title font-black text-brand-ink"
+            />
+            <p className="text-base sm:text-xl text-brand-warmgrey mt-3 sm:mt-4">
+              From initial creative vision to live posts and continuous tuning.
             </p>
           </div>
 
-          <MagneticButton className="w-full md:w-auto">
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="h-[52px] w-full md:w-auto inline-flex items-center justify-center gap-2 bg-brand-red hover:bg-brand-red-hover text-white text-base font-black px-8 rounded-full shadow-sticker tap-bounce active:scale-[0.98] transition-all whitespace-nowrap"
-            >
-              <MessageCircle className="w-5 h-5 fill-white/20" />
-              <span>Chat on WhatsApp</span>
-            </a>
-          </MagneticButton>
+          <ProcessCards />
         </div>
       </section>
+
+      <BriefBuilder />
 
     </div>
   );

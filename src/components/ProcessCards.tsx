@@ -87,14 +87,14 @@ export default function ProcessCards() {
             className="relative bg-white rounded-[20px] p-5 min-[360px]:p-6 border border-brand-border shadow-sm tap-bounce active:scale-[0.98]"
           >
             {/* Step marker node on the timeline */}
-            <div className="absolute -left-6 min-[380px]:-left-8 sm:-left-10 top-5 w-4 h-4 min-[380px]:w-6 min-[380px]:h-6 rounded-full bg-white border-2 border-brand-red flex items-center justify-center text-[10px] font-mono font-black text-brand-red shadow-sm z-10 -translate-x-1/2">
+            <div className="absolute -left-6 min-[380px]:-left-8 sm:-left-10 top-5 w-4 h-4 min-[380px]:w-6 min-[380px]:h-6 rounded-full bg-white border-2 border-brand-red flex items-center justify-center text-[11px] font-black text-brand-red shadow-sm z-10 -translate-x-1/2">
               <span className="hidden min-[380px]:inline">{item.step}</span>
               <span className="min-[380px]:hidden w-1.5 h-1.5 rounded-full bg-brand-red" />
             </div>
 
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-black text-brand-red bg-brand-cream px-2.5 py-0.5 rounded-full border border-brand-border">
+                <span className="text-xs font-black text-brand-red bg-brand-cream px-2.5 py-0.5 rounded-full border border-brand-border">
                   Step {item.step}
                 </span>
                 <h3 className="text-base min-[360px]:text-lg font-black text-brand-ink">
@@ -136,7 +136,7 @@ export default function ProcessCards() {
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-mono font-black text-brand-red bg-brand-cream px-3 py-1 rounded-full border border-brand-border">
+                  <span className="text-xs font-black text-brand-red bg-brand-cream px-3 py-1 rounded-full border border-brand-border">
                     {item.step}
                   </span>
                   <div className="p-2 rounded-full bg-brand-cream group-hover:scale-110 transition-transform">

@@ -1,6 +1,6 @@
 import React from "react";
-import Image from "next/image";
 import { Project } from "@/content/projects";
+import ProjectImage from "@/components/ProjectImage";
 
 interface ProjectGalleryProps {
   media: Project["media"];
@@ -17,10 +17,9 @@ export default function ProjectGallery({ media, title }: ProjectGalleryProps) {
           key={item.url}
           className="relative aspect-[4/3] rounded-[16px] sm:rounded-[20px] bg-brand-cream border border-brand-border overflow-hidden shadow-card"
         >
-          <Image
+          <ProjectImage
             src={item.url}
             alt={item.alt || `${title} image ${idx + 1}`}
-            fill
             sizes="(max-width: 640px) 100vw, 50vw"
             className="object-cover"
           />
